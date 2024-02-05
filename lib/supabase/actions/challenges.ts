@@ -54,13 +54,13 @@ export async function _getChallenges(search: searchType = {}) {
   if (error) {
     throw error;
   }
-
+  console.log(data, error, count);
   // Determine if there's a next page by the presence of an extra item
   const hasNextPage = data.length > limit;
 
   // If there's an extra item, remove it from the results
   const responseData = hasNextPage ? data.slice(0, -1) : data;
-
+  // console.log(responseData, hasNextPage, count);
   return { data: responseData, nextPage: hasNextPage, totalCount: count };
 }
 
