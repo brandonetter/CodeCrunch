@@ -4,9 +4,7 @@ import RunButton from "./RunButton";
 export default function RunPanel() {
   return (
     <section className="relative">
-      <div className="absolute right-0">
-        <RunButton />
-      </div>
+      <RunButton className="absolute right-0" />
       <ResultsErrorTabs />
     </section>
   );
