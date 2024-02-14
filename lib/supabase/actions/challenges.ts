@@ -1,6 +1,6 @@
 "use server";
 import { unstable_cache } from "next/cache";
-import { supabase } from "@/lib/supabase/server";
+import { createClient, supabase } from "@/lib/supabase/server";
 
 type searchType = {
   page?: string | number | undefined;
@@ -12,6 +12,7 @@ type searchType = {
 
 export async function _getChallenge(name: string) {
   const urlDecodedName = decodeURIComponent(name);
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("challenges")
     .select("*")
@@ -33,6 +34,7 @@ export async function _getChallenges(search: searchType = {}) {
   let { page = 1, limit = 5, asc, desc, ...rest } = search;
   page = Number(page);
   limit = Number(limit);
+  const supabase = await createClient();
   let query = supabase.from("challenges").select("*");
 
   Object.keys(rest).forEach((key) => {

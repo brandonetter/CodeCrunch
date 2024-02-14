@@ -31,5 +31,5 @@ export function updateURL(
 
   const search = cleanParams(newParams).toString();
 
-  router.push(`?${search}`);
+  router.push(`?${search}`, { scroll: false });
 }

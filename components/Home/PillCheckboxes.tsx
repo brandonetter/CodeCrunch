@@ -29,6 +29,10 @@ const pills = [
     border: "border-red-800",
   },
   {
+    id: "divider",
+    category: "divider",
+  },
+  {
     id: "database",
     value: "Database",
     category: "category",
@@ -63,25 +67,30 @@ export default function PillCheckboxes() {
   };
   return (
     <article className="flex md:justify-center flex-wrap items-center gap-2">
-      {pills.map((pill) => (
-        <label key={pill.id} className="cursor-pointer">
-          <Pill
-            value={pill.id.toString()}
-            className={`${pill.border} bg-opacity-50 peer-checked:bg-opacity-100 border border-opacity-65 peer-checked:border-opacity-100`}
-          >
-            <input
-              className="hidden peer"
-              type="checkbox"
-              data-param={pill.category}
-              data-value={pill.id}
-              checked={params.get(pill.category) === pill.id.toString()}
-              onChange={handleCheckbox}
-            ></input>
-            <Circle className="peer-checked:hidden w-4" />
-            <CheckCircle2 className="hidden peer-checked:flex w-4" />
-          </Pill>
-        </label>
-      ))}
+      {pills.map((pill) => {
+        if (pill.id === "divider") {
+          return <div key={pill.id} className="w-4"></div>;
+        }
+        return (
+          <label key={pill.id} className="cursor-pointer">
+            <Pill
+              value={pill.id.toString()}
+              className={`${pill.border}  bg-transparent peer-checked:bg-opacity-100 border-4 border-opacity-30 has-[input:checked]:border-opacity-100  `}
+            >
+              <input
+                className="hidden peer"
+                type="checkbox"
+                data-param={pill.category}
+                data-value={pill.id}
+                checked={params.get(pill.category) === pill.id.toString()}
+                onChange={handleCheckbox}
+              ></input>
+              <Circle className="peer-checked:hidden w-4" />
+              <CheckCircle2 className="hidden peer-checked:flex w-4" />
+            </Pill>
+          </label>
+        );
+      })}
     </article>
   );
 }

@@ -1,28 +1,32 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useRef } from "react";
+import { useState, useRef, useTransition, useEffect, use } from "react";
 import { Button } from "../ui/button";
 import { Loader, XCircle } from "lucide-react";
 import { updateURL } from "@/lib/utils";
 import { usePending } from "@/lib/hooks/usePending";
 import PillCheckboxes from "./PillCheckboxes";
+import React from "react";
 
-export default function SearchBar({ promise }: { promise: Promise<any> }) {
+const Searchbar = React.memo(({ promise }: { promise: Promise<any> }) => {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [pending] = usePending(promise);
+  const [pending] = usePending(promise || Promise.resolve());
   const params = useSearchParams();
   const [search, setSearch] = useState(params.get("name") || "");
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     updateURL(params, { name: search }, router);
-    setTimeout(() => inputRef.current?.focus(), 500);
   };
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [pending]);
 
   const resetSearch = () => {
     setSearch("");
@@ -42,7 +46,7 @@ export default function SearchBar({ promise }: { promise: Promise<any> }) {
             placeholder="Search"
             value={search}
             onChange={handleSearch}
-            className="max-lg:mb-2 border-t-0 border-l-0 border-r-0 border-b-2 border-gray-300 focus:border-blue-500/30 focus:outline-none w-full md:w-80 h-10 px-2"
+            className="max-lg:mb-2 border-t-0 border-l-0 border-r-0 border-b-2 border-blue-500/30 focus:outline-none w-full md:w-80 h-10 px-2"
           />
           {search && (
             <XCircle
@@ -64,4 +68,7 @@ export default function SearchBar({ promise }: { promise: Promise<any> }) {
       <PillCheckboxes />
     </form>
   );
-}
+});
+
+Searchbar.displayName = "Searchbar";
+export default Searchbar;

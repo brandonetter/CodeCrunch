@@ -9,12 +9,12 @@ export default function Pill({
   children?: React.ReactNode;
 }) {
   const colorMap = {
-    database: "bg-blue-100 text-blue-800",
-    frontend: "bg-green-100 text-green-800",
-    backend: "bg-yellow-100 text-yellow-800",
-    1: "bg-green-100 text-green-800",
-    2: "bg-yellow-100 text-yellow-800",
-    3: "bg-red-100 text-red-800",
+    database: "bg-blue-300 text-blue-800",
+    frontend: "bg-green-300 text-green-800",
+    backend: "bg-yellow-300 text-yellow-800",
+    1: "bg-green-300 text-green-800",
+    2: "bg-yellow-300 text-yellow-800",
+    3: "bg-red-300 text-red-800",
   };
 
   const textMap = {

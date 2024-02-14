@@ -3,36 +3,42 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-
-import CodeEditor from "@/components/CodeEditor";
+import MarkDown from "react-markdown";
+import CodeEditor from "@/components/Challenge/CodeEditor";
 import { _getChallenge } from "@/lib/supabase/actions/challenges";
-
+import remarkGfm from "remark-gfm";
+import RunPanel from "@/components/Challenge/RunPanel";
 export default async function ChallengePage({
   params,
 }: {
   params: { challenge: string };
 }) {
   const challenge = await _getChallenge(params.challenge);
+  console.log(challenge);
   return (
     <div>
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel
-          className="h-[calc(100vh-58px)]"
-          defaultSize={30}
-          minSize={30}
+          className="h-[calc(100vh-58px)] overflow-scroll p-2"
+          defaultSize={20}
+          minSize={20}
           maxSize={50}
         >
-          <ResizablePanelGroup direction="vertical">
-            <ResizablePanel minSize={20} maxSize={65} defaultSize={25}>
-              {challenge.name}
-            </ResizablePanel>
-            <ResizableHandle withHandle />
-            <ResizablePanel>Twos</ResizablePanel>
-          </ResizablePanelGroup>
+          <MarkDown remarkPlugins={[remarkGfm]}>
+            {challenge.description.repeat(10)}
+          </MarkDown>
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel>
-          <CodeEditor />
+          <ResizablePanelGroup direction="vertical">
+            <ResizablePanel minSize={20} maxSize={85} defaultSize={75}>
+              <CodeEditor defaultCode={challenge.default_code} />
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel className="p-2">
+              <RunPanel />
+            </ResizablePanel>
+          </ResizablePanelGroup>
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>

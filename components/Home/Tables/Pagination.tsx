@@ -20,16 +20,16 @@ export default function PaginationComponent({
     updateURL(params, { page: page.toString() }, router);
 
   return (
-    <section className="flex justify-end gap-2">
+    <section className="absolute top-0 translate-y-1/4 h-fit right-0 flex justify-end gap-2">
       <Button
-        className="w-24 h-8 transition-all duration-500"
+        className="w-24 h-8  hover:text-black rounded-xl transition-all bg-transparent border-2 border-green-300 text-green-300 duration-500"
         disabled={currentPage == 1 || pending}
         onClick={() => setPageUrl(Number(currentPage) - 1)}
       >
         Previous
       </Button>
       <Button
-        className="w-24 h-8 transition-all duration-500"
+        className="w-24 h-8 hover:text-black rounded-xl transition-all duration-500  bg-transparent border-2 border-green-300 text-green-300 "
         disabled={!nextPage || pending}
         onClick={() => setPageUrl(Number(currentPage) + 1)}
       >

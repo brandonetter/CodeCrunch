@@ -1,7 +1,7 @@
 import Pill from "@/components/shared/Pill";
 
 export default function CellRender({ col, row }: { col: any; row: any }) {
-  if (col === "id" || col === "created_at") return null;
+  if (!["name", "difficulty", "category"].includes(col)) return null;
   return (
     <div className="w-1/3 flex">
       {col === "name" ? (
