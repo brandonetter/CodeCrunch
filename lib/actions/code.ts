@@ -11,42 +11,51 @@ export async function runCode(code: string, challenge: string) {
   const tests = JSON.parse(challengeData.inputs);
   const expectedOutputs = JSON.parse(challengeData.outputs);
 
-  const responsePromises = tests.map((test: any) => {
-    return fetch(process.env.PISTON_BASE_URL!, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        language: "javascript",
-        version: "18.15.0",
-        files: [
-          {
-            name: "main.mjs",
-            content: `import runner from "./remote.mjs";\nconsole.log(runner(${JSON.stringify(
-              test
-            )}));`,
-          },
-          {
-            name: "remote.mjs",
-            content: code,
-          },
-        ],
-        stdin: test.input,
-        args: [],
-        compile_timeout: 10000,
-        run_timeout: 3000,
-        compile_memory_limit: -1,
-        run_memory_limit: -1,
-      }),
-    });
-  });
-
-  const responseData = await Promise.all(responsePromises);
   const responses = await Promise.all(
-    responseData.map((response) => response.json())
+    tests.map(async (test: any) => {
+      const response = await fetch(process.env.PISTON_BASE_URL!, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          language: "javascript",
+          version: "18.15.0",
+          files: [
+            {
+              name: "main.mjs",
+              content: `import runner from "./remote.mjs";\nconsole.log(runner(${JSON.stringify(
+                test
+              )}));`,
+            },
+            {
+              name: "remote.mjs",
+              content: code,
+            },
+          ],
+          stdin: test.input,
+          args: [],
+          compile_timeout: 10000,
+          run_timeout: 3000,
+          compile_memory_limit: -1,
+          run_memory_limit: -1,
+        }),
+      });
+      return response.json(); // Parse the JSON response directly within the map
+    })
   );
-  let responseText = "";
+
+  const responseArray: {
+    test: any;
+    success: boolean;
+    expectedOutput: any;
+    output: any;
+  }[] = expectedOutputs.map((expectedOutput: any) => ({
+    test: JSON.stringify(tests[expectedOutputs.indexOf(expectedOutput)]),
+    expectedOutput: JSON.stringify(expectedOutput),
+    success: true,
+    output: JSON.stringify(expectedOutput),
+  }));
   let errorText = "";
   expectedOutputs.forEach((expectedOutput: any, index: number) => {
     const { stderr, stdout } = responses[index].run;
@@ -54,11 +63,10 @@ export async function runCode(code: string, challenge: string) {
       errorText += stderr + "\n";
     }
     if (stdout != expectedOutput) {
-      responseText += `Failed Test #${index} Expected ${expectedOutput} but got ${stdout}!\n`;
-    } else {
-      responseText += `Passed Test #${index} Expected ${expectedOutput} and got ${stdout}!\n`;
+      responseArray[index].success = false;
+      responseArray[index].output = stdout;
     }
   });
 
-  return { stderr: errorText, stdout: responseText };
+  return { stderr: errorText, stdout: responseArray };
 }

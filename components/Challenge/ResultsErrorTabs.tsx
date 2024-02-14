@@ -3,14 +3,15 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
 import { AlertCircleIcon } from "lucide-react";
 import { useCodeStore } from "@/context";
 import { motion, AnimatePresence } from "framer-motion";
+import TestResults from "./TestResults";
 
 export default function ResultsErrorTabs() {
-  const { errors, results, setCurrentTab, newErrors, newResults } =
+  const { errors, results, setCurrentTab, newErrors, newResults, loading } =
     useCodeStore();
   return (
     <Tabs
       defaultValue="Results"
-      className="w-[400px]"
+      className="w-2/3"
       onValueChange={(e) => setCurrentTab(e)}
     >
       <TabsList>
@@ -54,7 +55,9 @@ export default function ResultsErrorTabs() {
         </AnimatePresence>
       </TabsList>
       <TabsContent value="Results">
-        {results ? results : "Run your code to see the results."}
+        <div className="transition-all" style={{ opacity: loading ? 0.2 : 1 }}>
+          <TestResults results={results} />
+        </div>
       </TabsContent>
       <TabsContent value="Errors">
         {errors ? errors : "Run your code to see the errors."}
