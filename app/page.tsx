@@ -1,14 +1,10 @@
-import PageLayout from "@/components/hoc/PageLayout";
-import ChallengeCard from "@/components/Home/ChallengeCard";
-import AccordionWrapper from "@/components/shared/AccordionWrapper";
+import PageLayout from "@/components/PageLayout";
 import ChallengeTable from "@/components/Home/Tables/ChallengeTable/";
 import { getChallenges } from "@/lib/actions/challenges.actions";
 import SearchBar from "@/components/Home/SearchBar";
-import PaginationComponent from "@/components/Home/Tables/Pagination";
-import { Suspense } from "react";
-import { Framer } from "./Framer";
+import { Framer } from "../components/Animations/Framer";
 import TableHeader from "@/components/Home/Tables/ChallengeTable/TableHeader";
-import AnimateHeight from "@/components/shared/AnimateHeight";
+import AnimateHeight from "@/components/Animations/AnimateHeight";
 export default async function Home({ searchParams }: { searchParams: any }) {
   const challenges = getChallenges(searchParams);
 

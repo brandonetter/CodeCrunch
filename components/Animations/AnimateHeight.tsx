@@ -34,7 +34,6 @@ function AnimateHeight({ children, ...props }: AnimateHeightProps) {
   const containerStyle: CSSProperties = {
     height: height,
     overflow: "hidden",
-
     transition: `height 0.25s ease-out`,
     position: "relative",
   };

@@ -1,19 +1,5 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import AnimateHeight from "@/components/shared/AnimateHeight";
-import { ArrowUpDown } from "lucide-react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+
 import { Button } from "@/components/ui/button";
 import { ButtonSort } from "./ButtonSort";
 import CellRender from "./CellRender";
@@ -31,7 +17,7 @@ export type Challenge = {
   name: string;
 };
 
-export default async function DataTable({ promise, results }: Props) {
+export default async function DataTable({ promise }: Props) {
   const data = (await promise).data;
 
   interface ColumnDef<T> {

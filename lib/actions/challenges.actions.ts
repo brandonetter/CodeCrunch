@@ -17,7 +17,7 @@ const _getChallenges = async (search: searchType = {}) => {
 
   let query = prisma.challenges.findMany({
     where: {
-      ...Object.keys(rest).reduce((acc: any, key) => {
+      ...Object.keys(rest).reduce((acc: { [key: string]: {} }, key) => {
         acc[key] = {
           contains: search[key as keyof typeof search],
           mode: "insensitive",
