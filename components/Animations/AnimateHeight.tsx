@@ -5,6 +5,7 @@ import React, { useState, useRef, useEffect, CSSProperties } from "react";
 export interface AnimateHeightProps
   extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
+  speed?: string;
 }
 
 function AnimateHeight({ children, ...props }: AnimateHeightProps) {
@@ -34,12 +35,16 @@ function AnimateHeight({ children, ...props }: AnimateHeightProps) {
   const containerStyle: CSSProperties = {
     height: height,
     overflow: "hidden",
-    transition: `height 0.25s ease-out`,
+    transition: `height ${props?.speed || "0.25s"} ease-out`,
     position: "relative",
   };
 
   return (
-    <div {...props} style={containerStyle} className="rounded-b-sm bg-card">
+    <div
+      {...props}
+      style={containerStyle}
+      className={`rounded-b-sm ${props.className}`}
+    >
       <div ref={contentElement} className="absolute inset-x-0 top-0">
         {children}
       </div>

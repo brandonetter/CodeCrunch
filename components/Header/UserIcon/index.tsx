@@ -1,8 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
-
+import { getServerSession } from "next-auth";
+import SignUpButton from "./SignUpButton";
 import UserPopup from "./UserPopup";
-export default function UserIcon() {
+
+export default async function UserIcon() {
+  const session = await getServerSession();
+
+  if (!session) {
+    return <SignUpButton />;
+  }
   return (
     <Drawer direction="right">
       <DrawerTrigger asChild>

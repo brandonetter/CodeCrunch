@@ -14,7 +14,7 @@ export default async function Home({ searchParams }: { searchParams: any }) {
         <SearchBar promise={challenges} />
         <section>
           <TableHeader promise={challenges} />
-          <AnimateHeight>
+          <AnimateHeight className="bg-card">
             <Framer>
               <ChallengeTable
                 promise={challenges}

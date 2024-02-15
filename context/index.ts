@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { runCode } from "@/lib/actions/code";
+import React, { Component } from "react";
 
 interface Result {
   test: any;
@@ -24,6 +25,20 @@ interface CodeStore {
   newErrors: boolean;
   newResults: boolean;
 }
+
+interface PopupStore {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  Component: React.FC;
+  setComponent: (component: React.FC) => void;
+}
+
+export const usePopupStore = create<PopupStore>((set) => ({
+  open: false,
+  Component: React.Fragment as React.FC,
+  setOpen: (open) => set({ open }),
+  setComponent: (component) => set({ Component: component }),
+}));
 
 export const useCodeStore = create<CodeStore>((set, get) => ({
   code: "",
