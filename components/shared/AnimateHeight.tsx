@@ -35,12 +35,12 @@ function AnimateHeight({ children, ...props }: AnimateHeightProps) {
     height: height,
     overflow: "hidden",
 
-    transition: `height 0.15s ease-out`,
+    transition: `height 0.25s ease-out`,
     position: "relative",
   };
 
   return (
-    <div {...props} style={containerStyle} key="stay" className="rounded-b-sm">
+    <div {...props} style={containerStyle} className="rounded-b-sm bg-card">
       <div ref={contentElement} className="absolute inset-x-0 top-0">
         {children}
       </div>

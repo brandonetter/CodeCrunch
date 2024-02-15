@@ -35,15 +35,12 @@ export default async function DataTable({
   ];
 
   return (
-    <div className="px-4 rounded-md border border-b-0 h-fit relative bg-muted/50 hover:bg-muted">
+    <div className="px-4  rounded-md border-b-0 h-fit relative bg-muted/50 hover:bg-muted">
       <Table>
         <TableHeader>
           <TableRow className="flex">
             {columns.map((header, i) => (
-              <TableHead
-                key={header.id}
-                className="w-1/3 flex items-center p-0"
-              >
+              <TableHead key={header.id} className="w-1/3 flex items-center">
                 {header.header}
               </TableHead>
             ))}

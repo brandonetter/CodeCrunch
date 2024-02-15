@@ -67,28 +67,18 @@ export default async function DataTable({ promise, results }: Props) {
                 <TableCell
                   key={12}
                   colSpan={3}
-                  className="p-0 overflow-hidden bg-card"
+                  className="px-0 overflow-hidden bg-card flex relative h-12 items-center"
                 >
-                  <Accordion
-                    type="single"
-                    collapsible
-                    className="shadow-blue-500/30 shadow-sm"
-                  >
-                    <AccordionItem value={row.id}>
-                      <AccordionTrigger className="items-start">
-                        {Object.entries(row).map(([k, v]) => (
-                          <CellRender key={v} col={k} row={v} />
-                        ))}
-                      </AccordionTrigger>
-                      <AccordionContent className="p-4">
-                        {row.name}
-
-                        <Link href={`/challenge/${row.name}`}>
-                          <Button variant={"secondary"}>View</Button>
-                        </Link>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
+                  {Object.entries(row).map(([k, v]) => (
+                    <CellRender key={v} col={k} row={v} />
+                  ))}
+                  <div className="absolute right-0 my-2">
+                    <Link href={`/challenge/${row.name}`}>
+                      <Button variant={"secondary"} className="h-6">
+                        View
+                      </Button>
+                    </Link>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}

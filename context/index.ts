@@ -59,19 +59,22 @@ export const useCodeStore = create<CodeStore>((set, get) => ({
   },
   executeCode: async (challenge) => {
     set({ loading: true });
-    const { stderr, stdout } = await runCode(get().code, challenge);
-    if (stderr) {
-      set({ errors: stderr });
-      if (get().currentTab !== "Errors") {
-        set({ newErrors: true });
+    try {
+      const { stderr, stdout } = await runCode(get().code, challenge);
+      if (stderr) {
+        set({
+          errors: stderr,
+          newErrors: get().currentTab !== "Errors",
+        });
+      } else {
+        set({
+          errors: "",
+          results: stdout,
+          newResults: get().currentTab !== "Results",
+        });
       }
-    } else {
-      set({ errors: "", results: stdout });
-      if (get().currentTab !== "Results") {
-        set({ newResults: true });
-      }
+    } finally {
+      set({ loading: false });
     }
-
-    set({ loading: false });
   },
 }));

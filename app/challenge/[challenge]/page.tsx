@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/resizable";
 import MarkDown from "react-markdown";
 import CodeEditor from "@/components/Challenge/CodeEditor";
-import { _getChallenge } from "@/lib/supabase/actions/challenges";
+import { getChallenge } from "@/lib/actions/challenges.actions";
 import remarkGfm from "remark-gfm";
 import RunPanel from "@/components/Challenge/RunPanel";
 export default async function ChallengePage({
@@ -13,8 +13,8 @@ export default async function ChallengePage({
 }: {
   params: { challenge: string };
 }) {
-  const challenge = await _getChallenge(params.challenge);
-  console.log(challenge);
+  const challenge = await getChallenge(params.challenge);
+
   return (
     <div>
       <ResizablePanelGroup direction="horizontal">
@@ -25,17 +25,17 @@ export default async function ChallengePage({
           maxSize={50}
         >
           <MarkDown remarkPlugins={[remarkGfm]}>
-            {challenge.description.repeat(10)}
+            {challenge?.description}
           </MarkDown>
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel>
+        <ResizablePanel defaultSize={80}>
           <ResizablePanelGroup direction="vertical">
             <ResizablePanel minSize={20} maxSize={85} defaultSize={75}>
-              <CodeEditor defaultCode={challenge.default_code} />
+              <CodeEditor defaultCode={challenge?.default_code!} />
             </ResizablePanel>
             <ResizableHandle withHandle />
-            <ResizablePanel className="p-2">
+            <ResizablePanel className="p-2" defaultSize={25}>
               <RunPanel />
             </ResizablePanel>
           </ResizablePanelGroup>

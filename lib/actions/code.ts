@@ -1,12 +1,16 @@
 "use server";
-import { _getChallenge } from "../supabase/actions/challenges";
+import { getChallenge } from "../actions/challenges.actions";
 export async function runCode(code: string, challenge: string) {
   // decode challenge from URL
   const challengeName = decodeURIComponent(challenge);
 
   // fetch the challenge from the database
 
-  const challengeData = await _getChallenge(challengeName);
+  const challengeData = await getChallenge(challengeName);
+
+  if (!challengeData?.inputs || !challengeData?.outputs) {
+    return { stderr: "Challenge not found", stdout: [] };
+  }
 
   const tests = JSON.parse(challengeData.inputs);
   const expectedOutputs = JSON.parse(challengeData.outputs);

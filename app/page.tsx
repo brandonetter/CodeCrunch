@@ -2,7 +2,7 @@ import PageLayout from "@/components/hoc/PageLayout";
 import ChallengeCard from "@/components/Home/ChallengeCard";
 import AccordionWrapper from "@/components/shared/AccordionWrapper";
 import ChallengeTable from "@/components/Home/Tables/ChallengeTable/";
-import { getChallenges } from "@/lib/supabase/actions/challenges";
+import { getChallenges } from "@/lib/actions/challenges.actions";
 import SearchBar from "@/components/Home/SearchBar";
 import PaginationComponent from "@/components/Home/Tables/Pagination";
 import { Suspense } from "react";
