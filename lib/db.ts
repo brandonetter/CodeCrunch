@@ -9,6 +9,12 @@ declare module "next-auth" {
   interface User {
     role: string;
   }
+  interface Session {
+    user: {
+      role: string;
+      image: string;
+    };
+  }
 }
 
 export const authOptions: NextAuthOptions = {
@@ -30,6 +36,10 @@ export const authOptions: NextAuthOptions = {
         token.role = user.role;
       }
       return token;
+    },
+    async session({ session, token }) {
+      session.user.role = token.role as string;
+      return session;
     },
   },
 };

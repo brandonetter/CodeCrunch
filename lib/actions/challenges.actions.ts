@@ -1,6 +1,7 @@
-import console from "console";
+"use server";
 import prisma from "../prisma";
 import { unstable_cache as cache } from "next/cache";
+import result from "postcss/lib/result";
 
 type searchType = {
   page?: string | number | undefined;
@@ -61,3 +62,34 @@ const _getChallenge = async (name: string) => {
 export const getChallenge = cache(_getChallenge, ["challenge"], {
   revalidate: 120,
 });
+
+export const addChallenge = async (data: FormData) => {
+  const {
+    title,
+    description,
+    code,
+    testCases,
+    answers,
+    points,
+    categoryD,
+    category,
+  } = Object.fromEntries(data);
+  console.log(title, description, code, testCases, answers, points, categoryD);
+  const difficultyMap = {
+    easy: "1",
+    medium: "2",
+    hard: "3",
+  };
+  const result = await prisma.challenge.create({
+    data: {
+      category: category as string,
+      name: title as string,
+      description: description as string,
+      difficulty: difficultyMap[categoryD as keyof typeof difficultyMap],
+      points: Number(points),
+      default_code: code as string,
+      inputs: testCases as string,
+      outputs: answers as string,
+    },
+  });
+};

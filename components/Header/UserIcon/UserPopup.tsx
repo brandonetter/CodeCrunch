@@ -7,6 +7,8 @@ import {
   DrawerClose,
 } from "@/components/ui/drawer";
 import SignOutButton from "./SignOutButton";
+import IsAdmin from "@/components/shared/IsAdmin";
+import Link from "next/link";
 export default function UserPopup({
   user,
 }: {
@@ -20,6 +22,15 @@ export default function UserPopup({
       </DrawerHeader>
       <div className="p-4 pb-0">
         <div className="mt-3 h-[120px]">
+          <IsAdmin>
+            <Link href="/admin">
+              <Button variant="secondary" className="w-full">
+                Admin
+              </Button>
+            </Link>
+
+            <div className="my-4 h-px bg-muted" />
+          </IsAdmin>
           <SignOutButton />
 
           {/* divider */}
