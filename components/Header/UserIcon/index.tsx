@@ -1,26 +1,29 @@
-import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
-import { getServerSession } from "next-auth";
+
 import SignUpButton from "./SignUpButton";
 import UserPopup from "./UserPopup";
-
+import { getSession } from "@/lib/db";
 export default async function UserIcon() {
-  const session = await getServerSession();
+  const session = await getSession();
 
   if (!session) {
     return <SignUpButton />;
   }
+
   return (
     <Drawer direction="right">
       <DrawerTrigger asChild>
-        <Button
-          variant="outline"
-          className="rounded-full flex flex-shrink-0 size-10"
-        ></Button>
+        <button>
+          <img
+            src={session.user?.image || "/user.svg"}
+            alt="user profile"
+            className="rounded-full w-10 h-10 object-cover"
+          />
+        </button>
       </DrawerTrigger>
 
       <DrawerContent className="max-sm:w-full sm:w-80">
-        <UserPopup />
+        <UserPopup user={session.user as any} />
       </DrawerContent>
     </Drawer>
   );

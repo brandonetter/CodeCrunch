@@ -15,11 +15,11 @@ export default function PopupProvider() {
       <div
         className={`${parentClass} transition-all inset-0 fixed z-[150] flex items-center justify-center h-screen `}
       >
-        <AnimateHeight className="w-2/3">
+        <AnimateHeight className="w-72">
           <FramerPopup>
             {open && (
-              <div className="relative rounded-lg shadow-lg">
-                <div className="flex justify-end">
+              <div className="relative flex flex-col justify-center items-center rounded-lg shadow-lg">
+                <div className="items-center justify-center flex h-6 w-12 relative self-end bg-neutral-900 right-2 rounded-t-xl">
                   <button
                     onClick={() => setOpen(false)}
                     className="p-2 text-2xl text-gray-500"

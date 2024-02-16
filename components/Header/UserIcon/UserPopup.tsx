@@ -6,19 +6,22 @@ import {
   DrawerFooter,
   DrawerClose,
 } from "@/components/ui/drawer";
-
-export default function UserPopup() {
+import SignOutButton from "./SignOutButton";
+export default function UserPopup({
+  user,
+}: {
+  user: { name: string; email: string; image: string };
+}) {
   return (
     <div className="h-screen w-[100%] border flex flex-col">
-      <DrawerHeader>
-        <DrawerTitle>Username</DrawerTitle>
-        <DrawerDescription>username@email.com</DrawerDescription>
+      <DrawerHeader className="focus:outline-none select-none">
+        <DrawerTitle>{user.name}</DrawerTitle>
+        <DrawerDescription>{user.email}</DrawerDescription>
       </DrawerHeader>
       <div className="p-4 pb-0">
         <div className="mt-3 h-[120px]">
-          <Button variant="default" className="w-full">
-            Logout
-          </Button>
+          <SignOutButton />
+
           {/* divider */}
           <div className="my-4 h-px bg-muted" />
           {/* divider */}
