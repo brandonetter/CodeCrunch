@@ -15,7 +15,7 @@ const _getChallenges = async (search: searchType = {}) => {
   page = Number(page);
   limit = Number(limit);
 
-  let query = prisma.challenges.findMany({
+  let query = prisma.challenge.findMany({
     where: {
       ...Object.keys(rest).reduce((acc: { [key: string]: {} }, key) => {
         acc[key] = {
@@ -49,7 +49,7 @@ export const getChallenges = cache(_getChallenges, ["challenges"], {
 
 const _getChallenge = async (name: string) => {
   const urlDecodedName = decodeURIComponent(name);
-  const data = await prisma.challenges.findFirst({
+  const data = await prisma.challenge.findFirst({
     where: {
       name: urlDecodedName,
     },

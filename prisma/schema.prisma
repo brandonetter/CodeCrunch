@@ -8,8 +8,8 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model challenges {
-id           Int   @id @default(autoincrement())
+model Challenge {
+  id           Int      @id @default(autoincrement())
   name         String?
   difficulty   String?
   category     String?
@@ -18,23 +18,80 @@ id           Int   @id @default(autoincrement())
   default_code String?
   inputs       String?
   outputs      String?
+  points       Int?
+  PathChallenge PathChallenge[]
+  ChallengeTutorial ChallengeTutorial[]
+  ChallengeRun ChallengeRun[]
 }
+
+model ChallengeTutorial {
+  id          Int       @id @default(autoincrement())
+  challengeId Int
+  tutorialId  Int
+  order       Int
+  challenge   Challenge @relation(fields: [challengeId], references: [id])
+  tutorial    Tutorial  @relation(fields: [tutorialId], references: [id])
+}
+
+model Tutorial {
+  id            Int      @id @default(autoincrement())
+  title         String
+  description   String
+  content       String
+  display_order Int
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime @default(now()) @db.Timestamptz(6)
+
+  ChallengeTutorial ChallengeTutorial[]
+}
+
+model Path{
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime @default(now()) @db.Timestamptz(6)
+  PathChallenge PathChallenge[]
+}
+
+model PathChallenge {
+  id          Int      @id @default(autoincrement())
+  pathId      Int
+  challengeId Int
+  order       Int
+  path        Path      @relation(fields: [pathId], references: [id])
+  challenge   Challenge @relation(fields: [challengeId], references: [id])
+}
+
+model ChallengeRun {
+  id           Int      @id @default(autoincrement())
+  userId       String
+  challengeId  Int
+  created_at   DateTime @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime @default(now()) @db.Timestamptz(6)
+  result       String?
+  time         Float?
+  Challenge    Challenge @relation(fields: [challengeId], references: [id])
+  User         User      @relation(fields: [userId], references: [id])
+}
+
+
 
 // accounts
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -55,8 +112,11 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  points        Int       @default(0)
+  role          String    @default("user")
   accounts      Account[]
   sessions      Session[]
+  ChallengeRun  ChallengeRun[]
 }
 
 model VerificationToken {
