@@ -3,6 +3,7 @@ import { createRun } from "../actions/challengeruns.actions";
 import { getChallenge } from "../actions/challenges.actions";
 import { getUserByEmail, updatePoints } from "./user.actions";
 import { getSession } from "../db";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 /**
  *
@@ -110,7 +111,7 @@ export async function runCode(code: string, challenge: string) {
   // database writes were successful, but we're
   // also not blocking the user from seeing their
   // results quickly- giving them a better experience
-  createRun(user.id, {
+  await createRun(user.id, {
     id: challengeData.id,
     result: responseArray.every((response) => response.success)
       ? "pass"

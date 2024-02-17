@@ -33,6 +33,16 @@ interface PopupStore {
   setComponent: (component: React.FC) => void;
 }
 
+interface UserStore {
+  user: any;
+  setUser: (user: any) => void;
+}
+
+export const useUserStore = create<UserStore>((set) => ({
+  user: null,
+  setUser: (user) => set({ user }),
+}));
+
 export const usePopupStore = create<PopupStore>((set) => ({
   open: false,
   Component: React.Fragment as React.FC,

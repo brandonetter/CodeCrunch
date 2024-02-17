@@ -2,6 +2,21 @@
 import prisma from "../prisma";
 import { Challenge } from "@prisma/client";
 import { hasUserPassedChallenge } from "./challengeruns.actions";
+import { getSession } from "../db";
+
+export async function getCurrentUser() {
+  const session = await getSession();
+  const user =
+    session &&
+    (await prisma.user.findFirst({
+      where: {
+        email: session.user.email,
+      },
+    }));
+
+  return user;
+}
+
 export async function getUserByEmail(email: string) {
   const user = await prisma.user.findFirst({
     where: {

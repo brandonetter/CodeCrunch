@@ -8,6 +8,7 @@ import CodeEditor from "@/components/Challenge/CodeEditor";
 import { getChallenge } from "@/lib/actions/challenges.actions";
 import remarkGfm from "remark-gfm";
 import RunPanel from "@/components/Challenge/RunPanel";
+import RunList from "@/components/Challenge/RunList";
 export default async function ChallengePage({
   params,
 }: {
@@ -27,6 +28,7 @@ export default async function ChallengePage({
           <MarkDown remarkPlugins={[remarkGfm]}>
             {challenge?.description}
           </MarkDown>
+          <RunList challengeId={challenge?.id!} />
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={80}>

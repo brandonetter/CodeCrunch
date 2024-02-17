@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "../prisma";
+import { unstable_cache as cache, revalidateTag } from "next/cache";
 
 export async function createRun(
   userId: string,
@@ -23,6 +24,7 @@ export async function createRun(
     },
   });
 
+  revalidateTag("challengeRuns");
   return run;
 }
 
@@ -40,3 +42,24 @@ export async function hasUserPassedChallenge(
 
   return !!run;
 }
+
+export async function _getChallengeRuns(userId: string, challengeId: number) {
+  console.log("a");
+  const runs = await prisma.challengeRun.findMany({
+    where: {
+      userId,
+      challengeId,
+    },
+    take: 6,
+    orderBy: {
+      created_at: "desc",
+    },
+  });
+
+  return runs;
+}
+
+export const getChallengeRuns = cache(_getChallengeRuns, ["challengeRuns"], {
+  tags: ["challengeRuns"],
+  revalidate: 120,
+});
