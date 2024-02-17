@@ -64,6 +64,9 @@ export default function RunListDivs({ challengeId }: { challengeId: number }) {
     getChallenges();
   }, [loading, user]);
 
+  if (!user) {
+    return null;
+  }
   if (!hasMounted)
     return (
       <div className="relative mask1 h-52 flex flex-col gap-1.5">
@@ -73,6 +76,7 @@ export default function RunListDivs({ challengeId }: { challengeId: number }) {
         <div className="h-14  shrink-0 animate-pulse select-none hover:bg-opacity-80  w-full bg-gray-800 py-2 px-3  rounded-xl text-black shadow-md"></div>
       </div>
     );
+
   if (!runs.length && hasMounted)
     return (
       <div className="relative">

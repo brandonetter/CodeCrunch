@@ -1,9 +1,7 @@
 "use server";
 import { createRun } from "../actions/challengeruns.actions";
 import { getChallenge } from "../actions/challenges.actions";
-import { getCurrentUser, getUserByEmail, updatePoints } from "./user.actions";
-import { getSession } from "../db";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { getCurrentUser, updatePoints } from "./user.actions";
 
 /**
  *
@@ -23,6 +21,12 @@ import { revalidatePath, revalidateTag } from "next/cache";
  */
 export async function runCode(code: string, challenge: string) {
   // decode challenge from URL
+
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return { stderr: "User not found", stdout: [] };
+  }
   const challengeName = decodeURIComponent(challenge);
 
   // fetch the challenge from the database
@@ -35,8 +39,6 @@ export async function runCode(code: string, challenge: string) {
 
   const tests = JSON.parse(challengeData.inputs);
   const expectedOutputs = JSON.parse(challengeData.outputs);
-
-  console.log("Running code against tests", tests, expectedOutputs);
 
   // ping the piston server to check the speed
   // for the user's run
@@ -121,17 +123,11 @@ export async function runCode(code: string, challenge: string) {
     }
   });
 
-  const user = await getCurrentUser();
-
-  if (!user) {
-    return { stderr: "User not found", stdout: [] };
-  }
-
   const noErrors = !errorText;
   const success = responseArray.every((response) => response.success);
+  let gotPoints = false;
 
   if (noErrors) {
-    let gotPoints = false;
     if (success) {
       gotPoints = await updatePoints(user.id, challengeData);
     }
@@ -144,14 +140,11 @@ export async function runCode(code: string, challenge: string) {
       time: Math.floor((finalTime - pingSpeed) / tests.length),
       code: code,
     });
-    if (gotPoints) {
-      return {
-        stderr: errorText,
-        stdout: responseArray,
-        points: challengeData.points,
-      };
-    }
   }
 
-  return { stderr: errorText, stdout: responseArray };
+  return {
+    stderr: errorText,
+    stdout: responseArray,
+    ...(gotPoints && { points: challengeData.points }),
+  };
 }
