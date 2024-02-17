@@ -25,10 +25,10 @@ export default async function ChallengePage({
           minSize={20}
           maxSize={50}
         >
+          <RunList challengeId={challenge?.id!} />
           <MarkDown remarkPlugins={[remarkGfm]}>
             {challenge?.description}
           </MarkDown>
-          <RunList challengeId={challenge?.id!} />
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={80}>

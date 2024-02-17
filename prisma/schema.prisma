@@ -71,6 +71,7 @@ model ChallengeRun {
   updated_at   DateTime @default(now()) @db.Timestamptz(6)
   result       String?
   time         Float?
+  code         String?
   Challenge    Challenge @relation(fields: [challengeId], references: [id])
   User         User      @relation(fields: [userId], references: [id])
 }

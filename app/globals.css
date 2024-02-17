@@ -67,7 +67,23 @@
     @apply bg-input text-foreground;
   }
 }
+.mask1 {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgb(251, 251, 251),
+    transparent
+  );
+  mask-image: linear-gradient(to bottom, rgb(255, 255, 255), transparent);
+}
 
+.mask2 {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgb(251, 251, 251) 50%,
+    transparent
+  );
+  mask-image: linear-gradient(to bottom, rgb(255, 255, 255) 70%, transparent);
+}
 @layer utilities {
   .main-header {
     @apply text-sm lg:text-xl;

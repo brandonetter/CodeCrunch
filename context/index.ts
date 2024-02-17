@@ -85,7 +85,7 @@ export const useCodeStore = create<CodeStore>((set, get) => ({
   executeCode: async (challenge) => {
     set({ loading: true });
     try {
-      const { stderr, stdout } = await runCode(get().code, challenge);
+      const { stderr, stdout, points } = await runCode(get().code, challenge);
       if (stderr) {
         set({
           errors: stderr,
@@ -97,6 +97,11 @@ export const useCodeStore = create<CodeStore>((set, get) => ({
           results: stdout,
           newResults: get().currentTab !== "Results",
         });
+
+        points &&
+          useUserStore
+            .getState()
+            .setUser({ points: useUserStore.getState().user.points + points });
       }
     } finally {
       set({ loading: false });

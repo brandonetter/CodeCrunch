@@ -29,10 +29,12 @@ export async function getUserByEmail(email: string) {
 
 export async function updatePoints(userId: string, challenge: Challenge) {
   const hasPassed = await hasUserPassedChallenge(userId, challenge.id);
+  console.log("hasPassed", hasPassed);
   // If the user has already passed the challenge, don't update their points
   if (hasPassed) {
-    return;
+    return false;
   }
+  console.log("updating points");
   const user = await prisma.user.update({
     where: {
       id: userId,
@@ -44,5 +46,5 @@ export async function updatePoints(userId: string, challenge: Challenge) {
     },
   });
 
-  return user;
+  return true;
 }

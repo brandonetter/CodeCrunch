@@ -1,7 +1,7 @@
 "use server";
 import { createRun } from "../actions/challengeruns.actions";
 import { getChallenge } from "../actions/challenges.actions";
-import { getUserByEmail, updatePoints } from "./user.actions";
+import { getCurrentUser, getUserByEmail, updatePoints } from "./user.actions";
 import { getSession } from "../db";
 import { revalidatePath, revalidateTag } from "next/cache";
 
@@ -98,29 +98,36 @@ export async function runCode(code: string, challenge: string) {
     }
   });
 
-  const session = await getSession();
-  const user = session && (await getUserByEmail(session.user.email));
+  const user = await getCurrentUser();
 
   if (!user) {
     return { stderr: "User not found", stdout: [] };
   }
 
-  // we don't need to wait for these to finish,
-  // so we don't need to await it
-  // we're sacrificing the ability to know if the
-  // database writes were successful, but we're
-  // also not blocking the user from seeing their
-  // results quickly- giving them a better experience
-  await createRun(user.id, {
-    id: challengeData.id,
-    result: responseArray.every((response) => response.success)
-      ? "pass"
-      : "fail",
-    time: finalTime,
-  });
+  const noErrors = !errorText;
+  const success = responseArray.every((response) => response.success);
 
-  if (responseArray.every((response) => response.success)) {
-    updatePoints(user.id, challengeData);
+  if (noErrors) {
+    let gotPoints = false;
+    if (success) {
+      gotPoints = await updatePoints(user.id, challengeData);
+    }
+
+    await createRun(user.id, {
+      id: challengeData.id,
+      result: responseArray.every((response) => response.success)
+        ? "pass"
+        : "fail",
+      time: finalTime,
+      code: code,
+    });
+    if (gotPoints) {
+      return {
+        stderr: errorText,
+        stdout: responseArray,
+        points: challengeData.points,
+      };
+    }
   }
 
   return { stderr: errorText, stdout: responseArray };

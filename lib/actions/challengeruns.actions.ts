@@ -5,7 +5,7 @@ import { unstable_cache as cache, revalidateTag } from "next/cache";
 
 export async function createRun(
   userId: string,
-  challenge: { id: number; result: string; time: number }
+  challenge: { id: number; result: string; time: number; code: string }
 ) {
   const run = await prisma.challengeRun.create({
     data: {
@@ -19,6 +19,7 @@ export async function createRun(
           id: userId,
         },
       },
+      code: challenge.code,
       result: challenge.result,
       time: challenge.time,
     },
@@ -32,6 +33,7 @@ export async function hasUserPassedChallenge(
   userId: string,
   challengeId: number
 ) {
+  console.log("b");
   const run = await prisma.challengeRun.findFirst({
     where: {
       userId,

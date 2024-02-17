@@ -9,7 +9,7 @@ import { useEffect } from "react";
 // as it will be visible and modifiable by the client
 
 export function UserSession() {
-  const { setUser } = useUserStore();
+  const { setUser, user } = useUserStore();
   useEffect(() => {
     async function updateUserState() {
       const user = await getCurrentUser();
@@ -17,5 +17,9 @@ export function UserSession() {
     }
     updateUserState();
   }, [setUser]);
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
   return null;
 }
