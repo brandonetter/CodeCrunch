@@ -36,6 +36,19 @@ export async function runCode(code: string, challenge: string) {
   const tests = JSON.parse(challengeData.inputs);
   const expectedOutputs = JSON.parse(challengeData.outputs);
 
+  console.log("Running code against tests", tests, expectedOutputs);
+
+  // ping the piston server to check the speed
+  // for the user's run
+  // we revalidate the ping every 120 seconds
+  const pingSpeedTime = Date.now();
+  await fetch(process.env.PISTON_PING_URL!, {
+    next: {
+      revalidate: 120,
+    },
+  });
+  const pingSpeed = Date.now() - pingSpeedTime;
+
   const startTime = Date.now();
   const responses = await Promise.all(
     tests.map(async (test: any) => {
@@ -92,7 +105,17 @@ export async function runCode(code: string, challenge: string) {
     if (stderr) {
       errorText += stderr + "\n";
     }
-    if (stdout != expectedOutput) {
+
+    // We trim the output and expected output to remove any whitespace
+    // that might cause the test to fail
+    // if the output is a string
+    const outTest = typeof stdout === "string" ? stdout.trim() : stdout;
+    const outExpected =
+      typeof expectedOutput === "string"
+        ? expectedOutput.trim()
+        : expectedOutput;
+
+    if (outTest != outExpected) {
       responseArray[index].success = false;
       responseArray[index].output = stdout;
     }
@@ -118,7 +141,7 @@ export async function runCode(code: string, challenge: string) {
       result: responseArray.every((response) => response.success)
         ? "pass"
         : "fail",
-      time: finalTime,
+      time: Math.floor((finalTime - pingSpeed) / tests.length),
       code: code,
     });
     if (gotPoints) {
