@@ -7,6 +7,7 @@ import PopupProvider from "@/components/Popup/Provider";
 import { UserSession } from "@/components/shared/UserSession";
 import { SessionProvider } from "next-auth/react";
 import { getSession } from "@/lib/db";
+import { SocketProvider } from "@/context/SocketProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -22,10 +23,12 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <UserSession />
-        <Header />
-        {children}
-        <PopupProvider />
+        <SocketProvider>
+          <UserSession />
+          <Header />
+          {children}
+          <PopupProvider />
+        </SocketProvider>
       </body>
     </html>
   );

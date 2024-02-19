@@ -5,11 +5,13 @@ import SearchBar from "@/components/Home/SearchBar";
 import { Framer } from "../components/Animations/Framer";
 import TableHeader from "@/components/Home/Tables/ChallengeTable/TableHeader";
 import AnimateHeight from "@/components/Animations/AnimateHeight";
+import LatestRuns from "@/components/Home/LatestRuns";
 export default async function Home({ searchParams }: { searchParams: any }) {
   const challenges = getChallenges(searchParams);
 
   return (
-    <PageLayout type={2}>
+    <PageLayout type={1}>
+      <LatestRuns />
       <section className="flex flex-col w-full gap-8 relative">
         <SearchBar promise={challenges} />
         <section>
