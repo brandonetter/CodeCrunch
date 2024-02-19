@@ -18,10 +18,6 @@ const useSockets = () => {
   const [latestRuns, setLatestRuns] = useState<RunDisplay[]>([]);
 
   useEffect(() => {
-    console.log(latestRuns);
-  }, [latestRuns]);
-
-  useEffect(() => {
     const socketInitializer = async () => {
       await fetch("/api/socket_io");
       const socketConnection = io({
@@ -44,6 +40,9 @@ const useSockets = () => {
     });
     socket.on("disconnect", () => {
       setIsConnected(false);
+    });
+    socket.on("latestRuns", (message: RunDisplay[]) => {
+      setLatestRuns(message);
     });
 
     socket.on("set-active-users", (message: string[]) => {

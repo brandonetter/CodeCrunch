@@ -1,8 +1,8 @@
 import { Server } from "socket.io";
 import { getSession } from "next-auth/react";
 import { createClient } from "@supabase/supabase-js";
-
 import prisma from "@/lib/prisma";
+
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SERVICE_KEY
@@ -52,12 +52,31 @@ export default async function SocketHandler(req, res) {
       .subscribe();
 
     io.on("connection", async (socket) => {
-      console.log("Socket connected", socket.id);
       const session = await getSession({ req });
       if (session) {
         userMap.set(socket, { id: socket.id, email: session.user.email });
       }
-      console.log("User Map", userMap);
+      const latestRuns = await prisma.challengeRun.findMany({
+        take: 5,
+        orderBy: {
+          created_at: "desc",
+        },
+        include: {
+          User: true,
+          Challenge: true,
+        },
+      });
+      const filteredRun = latestRuns.map((run) => {
+        const { User, Challenge, ...rest } = run;
+        return {
+          uh: "a",
+          run: rest,
+          user: User,
+          challenge: Challenge,
+        };
+      });
+
+      socket.emit("latestRuns", filteredRun);
     });
     res.end();
   }

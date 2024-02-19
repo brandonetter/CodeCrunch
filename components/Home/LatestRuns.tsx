@@ -1,11 +1,22 @@
 "use client";
 import { useSocketContext } from "@/context/SocketProvider";
 import { AnimatePresence, motion } from "framer-motion";
+import { Loader } from "lucide-react";
 export default function LatestRuns() {
   const { isConnected, activeUserList, latestRuns } = useSocketContext();
-  console.log(latestRuns);
+
+  if (!isConnected || !latestRuns.length) {
+    return (
+      <div className="h-80   flex flex-col items-start justify-start">
+        <h1>Latest Runs</h1>
+        <div className="h-full w-full flex items-center justify-center">
+          <Loader size="50" className="animate-spin" />
+        </div>
+      </div>
+    );
+  }
   return (
-    <div className="relative h-96 mask2">
+    <div className="relative h-80 mask2">
       <h1>Latest Runs</h1>
 
       <AnimatePresence>

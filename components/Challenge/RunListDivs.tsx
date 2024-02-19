@@ -26,16 +26,7 @@ export default function RunListDivs({ challengeId }: { challengeId: number }) {
 
   const [hasMounted, setHasMounted] = useState(false);
   const isMountedRef = useRef(false);
-  const addOptimisticRun = () => {
-    const optimisticRun = {
-      id: uuid(),
-      result: "loading",
-      time: 0,
-      code: "",
-      created_at: new Date().toISOString(),
-    };
-    setOptimisticRuns(optimisticRun as unknown as ChallengeRun);
-  };
+
   useEffect(() => {
     isMountedRef.current = true;
 
@@ -45,6 +36,16 @@ export default function RunListDivs({ challengeId }: { challengeId: number }) {
   }, []);
 
   useEffect(() => {
+    const addOptimisticRun = () => {
+      const optimisticRun = {
+        id: uuid(),
+        result: "loading",
+        time: 0,
+        code: "",
+        created_at: new Date().toISOString(),
+      };
+      setOptimisticRuns(optimisticRun as unknown as ChallengeRun);
+    };
     if (!user) return;
     if (loading && isMountedRef.current)
       return startTransition(addOptimisticRun);
