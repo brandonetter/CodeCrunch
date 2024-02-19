@@ -6,12 +6,20 @@ import { Framer } from "../components/Animations/Framer";
 import TableHeader from "@/components/Home/Tables/ChallengeTable/TableHeader";
 import AnimateHeight from "@/components/Animations/AnimateHeight";
 import LatestRuns from "@/components/Home/LatestRuns";
+import LatestPoints from "@/components/Home/LatestPoints";
 export default async function Home({ searchParams }: { searchParams: any }) {
   const challenges = getChallenges(searchParams);
 
   return (
     <PageLayout type={1}>
-      <LatestRuns />
+      <section className="flex flex-row w-full gap-8 relative">
+        <div className="w-1/2">
+          <LatestRuns />
+        </div>
+        <div className="w-1/2">
+          <LatestPoints />
+        </div>
+      </section>
       <section className="flex flex-col w-full gap-8 relative">
         <SearchBar promise={challenges} />
         <section>

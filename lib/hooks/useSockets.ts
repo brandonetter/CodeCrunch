@@ -16,6 +16,9 @@ const useSockets = () => {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [activeUserList, setActiveUserList] = useState<string[]>([]);
   const [latestRuns, setLatestRuns] = useState<RunDisplay[]>([]);
+  const [latestPointTransactions, setLatestPointTransactions] = useState<any[]>(
+    []
+  );
 
   useEffect(() => {
     const socketInitializer = async () => {
@@ -38,6 +41,12 @@ const useSockets = () => {
         return [message, ...prev];
       });
     });
+
+    socket.on("newPoints", (message: any) => {
+      setLatestPointTransactions((prev) => {
+        return [message, ...prev];
+      });
+    });
     socket.on("disconnect", () => {
       setIsConnected(false);
     });
@@ -45,6 +54,9 @@ const useSockets = () => {
       setLatestRuns(message);
     });
 
+    socket.on("latestPoints", (message: any[]) => {
+      setLatestPointTransactions(message);
+    });
     socket.on("set-active-users", (message: string[]) => {
       setActiveUserList(message);
     });
@@ -54,6 +66,7 @@ const useSockets = () => {
     isConnected,
     latestRuns,
     activeUserList,
+    latestPointTransactions,
   };
 };
 

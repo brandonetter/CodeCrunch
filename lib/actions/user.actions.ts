@@ -1,8 +1,9 @@
 "use server";
 import prisma from "../prisma";
-import { Challenge } from "@prisma/client";
+import { Challenge, User } from "@prisma/client";
 import { hasUserPassedChallenge } from "./challengeruns.actions";
 import { getSession } from "../db";
+import { unstable_cache as cache } from "next/cache";
 
 export async function getCurrentUser() {
   const session = await getSession();
@@ -17,6 +18,20 @@ export async function getCurrentUser() {
   return user;
 }
 
+async function _getUserIconById(id: string) {
+  const user = await prisma.user.findFirst({
+    where: {
+      id,
+    },
+  });
+
+  return user?.image;
+}
+
+export const getUserIconById = cache(_getUserIconById, ["userIcon"], {
+  revalidate: 240,
+});
+
 export async function getUserByEmail(email: string) {
   const user = await prisma.user.findFirst({
     where: {
@@ -27,21 +42,30 @@ export async function getUserByEmail(email: string) {
   return user;
 }
 
-export async function updatePoints(userId: string, challenge: Challenge) {
-  const hasPassed = await hasUserPassedChallenge(userId, challenge.id);
-  console.log("hasPassed", hasPassed);
+export async function updatePoints(user: User, challenge: Challenge) {
+  const hasPassed = await hasUserPassedChallenge(user.id, challenge.id);
   // If the user has already passed the challenge, don't update their points
   if (hasPassed) {
     return false;
   }
   console.log("updating points");
-  const user = await prisma.user.update({
+
+  await prisma.user.update({
     where: {
-      id: userId,
+      id: user.id,
     },
     data: {
       points: {
         increment: challenge.points!,
+      },
+      PointTransaction: {
+        create: {
+          points: challenge.points!,
+          reason: `Completed challenge: ${challenge.name}`,
+          userName: user?.name, // We denormalize the user's name here for the socket leaderboard
+          // so we don't have to join the user table to the point transaction table
+          // but we still have a join table for the user's points
+        },
       },
     },
   });

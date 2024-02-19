@@ -18,7 +18,9 @@ export default async function SocketHandler(req, res) {
     const io = new Server(res.socket.server, { addTrailingSlash: false });
     res.socket.server.io = io;
     const userMap = new Map();
-    // User State
+
+    // Directly use supabase to listen to changes
+    // instead of prisma
     const channel = supabase
       .channel("schema-db-changes")
       .on(
@@ -28,25 +30,21 @@ export default async function SocketHandler(req, res) {
           schema: "public",
         },
         async (payload) => {
-          // fetch the user from the database
-          const user = await prisma.user.findUnique({
-            where: {
-              id: payload.new.userId,
-            },
-          });
-          const challenge = await prisma.challenge.findUnique({
-            where: {
-              id: payload.new.challengeId,
-            },
-          });
-          // for each user in the userMap, send a message
-          userMap.forEach((_, socket) => {
-            io.to(socket.id).emit("newRun", {
-              user: user,
-              run: payload.new,
-              challenge,
-            });
-          });
+          switch (payload.table) {
+            case "ChallengeRun":
+              // fetch the user from the database
+
+              // for each user in the userMap, send a message
+              userMap.forEach((_, socket) => {
+                io.to(socket.id).emit("newRun", payload.new);
+              });
+              break;
+            case "PointTransaction":
+              userMap.forEach((_, socket) => {
+                io.to(socket.id).emit("newPoints", payload.new);
+              });
+              break;
+          }
         }
       )
       .subscribe();
@@ -69,14 +67,22 @@ export default async function SocketHandler(req, res) {
       const filteredRun = latestRuns.map((run) => {
         const { User, Challenge, ...rest } = run;
         return {
-          uh: "a",
-          run: rest,
+          ...rest,
           user: User,
           challenge: Challenge,
         };
       });
 
       socket.emit("latestRuns", filteredRun);
+
+      const latestPoints = await prisma.pointTransaction.findMany({
+        take: 5,
+        orderBy: {
+          created_at: "desc",
+        },
+      });
+
+      socket.emit("latestPoints", latestPoints);
     });
     res.end();
   }

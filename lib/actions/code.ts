@@ -129,11 +129,12 @@ export async function runCode(code: string, challenge: string) {
 
   if (noErrors) {
     if (success) {
-      gotPoints = await updatePoints(user.id, challengeData);
+      gotPoints = await updatePoints(user, challengeData);
     }
 
-    await createRun(user.id, {
+    await createRun(user, {
       id: challengeData.id,
+      name: challengeData.name!,
       result: responseArray.every((response) => response.success)
         ? "pass"
         : "fail",

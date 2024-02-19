@@ -2,10 +2,18 @@
 
 import prisma from "../prisma";
 import { unstable_cache as cache, revalidateTag } from "next/cache";
+import { getCurrentUser } from "./user.actions";
+import { User } from "@prisma/client";
 
 export async function createRun(
-  userId: string,
-  challenge: { id: number; result: string; time: number; code: string }
+  user: User,
+  challenge: {
+    id: number;
+    name: string;
+    result: string;
+    time: number;
+    code: string;
+  }
 ) {
   const run = await prisma.challengeRun.create({
     data: {
@@ -16,9 +24,11 @@ export async function createRun(
       },
       User: {
         connect: {
-          id: userId,
+          id: user.id,
         },
       },
+      challengeName: challenge.name, // some denormalization
+      userName: user.name, // for the socket queries
       code: challenge.code,
       result: challenge.result,
       time: challenge.time,
@@ -33,7 +43,6 @@ export async function hasUserPassedChallenge(
   userId: string,
   challengeId: number
 ) {
-  console.log("b");
   const run = await prisma.challengeRun.findFirst({
     where: {
       userId,
@@ -46,10 +55,10 @@ export async function hasUserPassedChallenge(
 }
 
 export async function _getChallengeRuns(userId: string, challengeId: number) {
-  console.log("a");
+  const user = await getCurrentUser();
   const runs = await prisma.challengeRun.findMany({
     where: {
-      userId,
+      userId: user?.id,
       challengeId,
     },
     take: 6,
