@@ -13,6 +13,7 @@ export default function UserIconById({
   const [icon, setIcon] = useState<string | null>();
   const [error, setError] = useState(false);
   useEffect(() => {
+    // this is cached
     getUserIconById(id).then((icon) => setIcon(icon));
   }, [id]);
   if (!icon)
