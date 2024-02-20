@@ -9,7 +9,10 @@ import {
 import SignOutButton from "./SignOutButton";
 import IsAdmin from "@/components/shared/IsAdmin";
 import Link from "next/link";
-export default function UserPopup({
+import { getUserByEmail } from "@/lib/actions/user.actions";
+import { User } from "lucide-react";
+import UserStats from "./UserStats";
+export default async function UserPopup({
   user,
 }: {
   user: { name: string; email: string; image: string };
@@ -19,6 +22,7 @@ export default function UserPopup({
       <DrawerHeader className="focus:outline-none select-none">
         <DrawerTitle>{user.name}</DrawerTitle>
         <DrawerDescription>{user.email}</DrawerDescription>
+        <UserStats email={user.email} />
       </DrawerHeader>
       <div className="p-4 pb-0">
         <div className="mt-3 h-[120px]">

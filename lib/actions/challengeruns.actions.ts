@@ -74,3 +74,22 @@ export const getChallengeRuns = cache(_getChallengeRuns, ["challengeRuns"], {
   tags: ["challengeRuns"],
   revalidate: 120,
 });
+
+export const getUserChallengeCompletions = async (email: string) => {
+  const user = await prisma.user.findFirst({
+    where: {
+      email,
+    },
+  });
+  const completions = await prisma.challengeRun.findMany({
+    where: {
+      userId: user?.id,
+      result: "pass",
+    },
+    select: {
+      challengeId: true,
+    },
+  });
+
+  return completions;
+};
