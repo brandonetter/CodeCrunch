@@ -1,6 +1,7 @@
 "use client";
 import { useSocketContext } from "@/context/SocketProvider";
 import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
 import { Flame, Loader, Shell } from "lucide-react";
 import RunCards from "../shared/RunCards";
 import UserIcon from "../Header/UserIcon";
@@ -33,16 +34,29 @@ export default function LatestPoints() {
             key={pointTransaction.id}
             className="flex justify-between bg-card select-none h-[60px] hover:bg-opacity-80 absolute w-full py-2 px-3  rounded-xl text-black shadow-md"
           >
-            <span className="text-gray-400 text-sm h-full justify-between uppercase flex flex-col">
-              <UserIconById
-                id={pointTransaction.userId}
-                username={pointTransaction.userName}
-                className="size-10 shrink-0"
-              />
-              <span>{pointTransaction.userName}</span>
-              {pointTransaction.reason}
-            </span>
-            <span className="text-yellow-600 text-3xl h-16 self-center flex content-center items-center">
+            <div className="flex gap-4 text-gray-400 text-2xl justify-center items-center ">
+              <span className="h-full justify-between uppercase flex flex-col">
+                <UserIconById
+                  id={pointTransaction.userId}
+                  username={pointTransaction.userName}
+                  className="size-10 shrink-0"
+                />
+              </span>
+              <div className="flex flex-col justify-center h-16">
+                <span className="font-bold text-sm text-gray-500">
+                  {pointTransaction.reason}
+                </span>
+                <Link
+                  className="hover:underline text-yellow-600 font-mono  flex items-center justify-start"
+                  href={`/challenge/${pointTransaction.challengeName}`}
+                >
+                  <span className="text-lg">
+                    {pointTransaction.challengeName}
+                  </span>
+                </Link>
+              </div>
+            </div>
+            <span className="text-yellow-600 font-mono text-3xl w-1/3 h-16 self-center flex items-center justify-end">
               +{pointTransaction.points}
               <Flame size={30} className="text-yellow-500" />
             </span>

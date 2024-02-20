@@ -9,7 +9,7 @@ const supabase = createClient(
 );
 
 export default async function SocketHandler(req, res) {
-  if (res.socket.server.io && process.env.NODE_ENV !== "development") {
+  if (res.socket.server.io) {
     console.log("Socket is already running");
     res.end();
   } else {
@@ -18,6 +18,15 @@ export default async function SocketHandler(req, res) {
     const io = new Server(res.socket.server, { addTrailingSlash: false });
     res.socket.server.io = io;
     const userMap = new Map();
+
+    // every 10 seconds, send the connected users as
+    // an array of user IDs
+    setInterval(() => {
+      const users = Array.from(userMap.values()).map((user) => user.user_id);
+      // turn it into a set
+      const uniqueUsers = Array.from(new Set(users));
+      io.emit("users", uniqueUsers);
+    }, 8000);
 
     // Directly use supabase to listen to changes
     // instead of prisma
@@ -35,6 +44,7 @@ export default async function SocketHandler(req, res) {
               // fetch the user from the database
 
               // for each user in the userMap, send a message
+              // only logged in users will get live updates
               userMap.forEach((_, socket) => {
                 io.to(socket.id).emit("newRun", payload.new);
               });
@@ -50,10 +60,27 @@ export default async function SocketHandler(req, res) {
       .subscribe();
 
     io.on("connection", async (socket) => {
-      const session = await getSession({ req });
+      console.log("connected");
+      const session = await getSession({ req: socket.request });
+      socket.on("disconnect", () => {
+        userMap.delete(socket);
+      });
       if (session) {
-        userMap.set(socket, { id: socket.id, email: session.user.email });
+        const user = await prisma.user.findUnique({
+          where: {
+            email: session.user.email,
+          },
+        });
+        userMap.set(socket, {
+          id: socket.id,
+          email: session.user.email,
+          user_id: user.id,
+        });
       }
+      const users = Array.from(userMap.values()).map((user) => user.user_id);
+      // turn it into a set
+      const uniqueUsers = Array.from(new Set(users));
+      socket.emit("users", uniqueUsers);
       const latestRuns = await prisma.challengeRun.findMany({
         take: 5,
         orderBy: {

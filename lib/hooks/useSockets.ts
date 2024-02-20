@@ -57,7 +57,8 @@ const useSockets = () => {
     socket.on("latestPoints", (message: any[]) => {
       setLatestPointTransactions(message);
     });
-    socket.on("set-active-users", (message: string[]) => {
+    socket.on("users", (message: string[]) => {
+      console.log("active users", message);
       setActiveUserList(message);
     });
   }, [socket]);

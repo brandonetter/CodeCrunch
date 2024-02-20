@@ -47,10 +47,10 @@ export default function Navbar() {
           </NavigationMenuTrigger>
           <NavigationMenuContent>
             <NavigationMenuIndicator />
-            <NavLink href="/" pathname={pathname}>
+            <NavLink href="/" pathname={pathname!}>
               Home
             </NavLink>
-            <NavLink href="/docs" pathname={pathname}>
+            <NavLink href="/docs" pathname={pathname!}>
               Docs
             </NavLink>
           </NavigationMenuContent>

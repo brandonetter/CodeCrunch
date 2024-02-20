@@ -61,10 +61,10 @@ export async function updatePoints(user: User, challenge: Challenge) {
       PointTransaction: {
         create: {
           points: challenge.points!,
-          reason: `Completed challenge: ${challenge.name}`,
-          userName: user?.name, // We denormalize the user's name here for the socket leaderboard
-          // so we don't have to join the user table to the point transaction table
-          // but we still have a join table for the user's points
+          reason: `Completed challenge:`,
+          challengeId: challenge.id,
+          challengeName: challenge.name,
+          userName: user?.name,
         },
       },
     },

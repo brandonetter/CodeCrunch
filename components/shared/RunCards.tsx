@@ -1,5 +1,6 @@
 import { ChallengeRun } from "@prisma/client";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { Loader } from "lucide-react";
 import { Button } from "../ui/button";
 import { useCodeStore } from "@/context";
@@ -67,10 +68,12 @@ export default function RunCards({
           <div className="text-gray-500  text-sm flex flex-col justify-between items-center">
             <div className="flex flex-col content-center items-center">
               {page === "latestRuns" && (
-                <span className="text-lg text-gray-400">
-                  {" "}
-                  {run?.challengeName}
-                </span>
+                <Link
+                  className="hover:underline text-yellow-600 font-mono  flex items-center justify-start"
+                  href={`/challenge/${run.challengeName}`}
+                >
+                  <span className="text-lg"> {run?.challengeName}</span>
+                </Link>
               )}
               <span>{new Date(run.created_at).toLocaleTimeString()}</span>
             </div>
