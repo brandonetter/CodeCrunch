@@ -18,7 +18,7 @@ export default function LatestRuns() {
   }
   return (
     <AnimatePresence>
-      <div className="relative h-80 mask2">
+      <div className="relative h-80 mask2 flex flex-col gap-y-1">
         <h1>Latest Runs</h1>
         <RunCards runs={latestRuns} page="latestRuns" />
       </div>

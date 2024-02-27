@@ -1,4 +1,4 @@
-import { getSession } from "@/lib/db";
+import { getSession } from "@/lib/auth";
 import React from "react";
 export default async function IsAdmin({
   children,

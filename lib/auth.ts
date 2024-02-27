@@ -3,6 +3,8 @@ import { NextAuthOptions } from "next-auth";
 import prisma from "./prisma";
 import GithubProvider from "next-auth/providers/github";
 import { getServerSession } from "next-auth";
+import jwt from "jsonwebtoken";
+import { JWTDecodeParams } from "next-auth/jwt";
 
 // extend User to include role
 declare module "next-auth" {
@@ -22,6 +24,27 @@ export const authOptions: NextAuthOptions = {
   // use token for session
   session: {
     strategy: "jwt",
+  },
+  jwt: {
+    // custom encode/decode
+    // so we can share the token with other services
+    async encode({ secret, token, maxAge = 256000 }) {
+      const jwtClaims = {
+        exp: Date.now() + maxAge * 1000,
+        ...token,
+      };
+      const encodedToken = jwt.sign(jwtClaims, secret, {
+        algorithm: "HS512",
+      });
+
+      return encodedToken;
+    },
+    async decode({ secret, token }: JWTDecodeParams): Promise<any> {
+      const decodedToken = jwt.verify(token!, secret, {
+        algorithms: ["HS512"],
+      });
+      return decodedToken;
+    },
   },
 
   adapter: PrismaAdapter(prisma),
@@ -45,4 +68,4 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-export const getSession = () => getServerSession(authOptions);
+export const getSession = async () => await getServerSession(authOptions);

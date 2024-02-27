@@ -1,8 +1,49 @@
 "use server";
+import console from "console";
 import { createRun } from "../actions/challengeruns.actions";
 import { getChallenge } from "../actions/challenges.actions";
 import { getCurrentUser, updatePoints } from "./user.actions";
 
+export async function runCodeRepl(code: string) {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return { stderr: "User not found", stdout: [] };
+  }
+
+  const startTime = Date.now();
+  const response = await fetch(process.env.PISTON_BASE_URL!, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      language: "javascript",
+      version: "18.15.0",
+      files: [
+        {
+          name: "main.mjs",
+          content: code,
+        },
+      ],
+      stdin: "",
+      args: [],
+      compile_timeout: 10000,
+      run_timeout: 3000,
+      compile_memory_limit: -1,
+      run_memory_limit: -1,
+    }),
+  });
+
+  const piston = await response.json();
+  const finalTime = Date.now() - startTime;
+
+  return {
+    stderr: piston.run.stderr,
+    stdout: piston.run.stdout,
+    time: finalTime,
+  };
+}
 /**
  *
  *

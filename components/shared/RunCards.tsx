@@ -19,15 +19,13 @@ export default function RunCards({
 
   const motionDivClass = `${
     page === "latestRuns" ? "bg-card" : "bg-gray-800"
-  } select-none h-[60px] hover:bg-opacity-80 absolute w-full py-2 px-3  rounded-xl text-black shadow-md`;
-  return runs.map((run, i) => (
+  } select-none h-[60px] hover:bg-opacity-80 w-full py-2 px-3  rounded-xl text-black shadow-md`;
+  return runs.map((run) => (
     <motion.div
-      initial={run.new ? { opacity: 0, y: 0 } : { opacity: 0, y: -10 + i * 65 }}
-      animate={{
-        opacity: 1,
-        y: 0 + i * 65,
-      }}
-      exit={{ opacity: 0, y: 20 + i * 65 }}
+      layoutId={run}
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ opacity: 0 }}
       transition={{
         duration: 0.2,
         type: "spring",

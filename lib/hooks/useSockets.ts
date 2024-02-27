@@ -11,7 +11,7 @@ interface RunDisplay extends ChallengeRun {
   };
 }
 
-const useSockets = () => {
+const useSockets = (cookie: string) => {
   const [socket, setSocket] = useState<Socket>();
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [activeUserList, setActiveUserList] = useState<string[]>([]);
@@ -23,8 +23,15 @@ const useSockets = () => {
   useEffect(() => {
     const socketInitializer = async () => {
       await fetch("/api/socket_io");
-      const socketConnection = io({
-        addTrailingSlash: false,
+      // const socketConnection = io({
+      //   addTrailingSlash: false,
+      // });
+      const sessionCookie = cookie;
+      // io("https://codecrunchsockets.onrender.com"
+      const socketConnection = io("http://localhost:3000", {
+        auth: {
+          token: sessionCookie,
+        },
       });
       setSocket(socketConnection);
     };

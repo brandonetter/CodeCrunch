@@ -12,6 +12,7 @@ export default function Pill({
     database: "bg-blue-300 text-blue-800",
     frontend: "bg-green-300 text-green-800",
     backend: "bg-yellow-300 text-yellow-800",
+    bounty: "bg-yellow-600 text-black",
     1: "bg-green-300 text-green-800",
     2: "bg-yellow-300 text-yellow-800",
     3: "bg-red-300 text-red-800",
@@ -24,6 +25,7 @@ export default function Pill({
     database: "Database",
     frontend: "Frontend",
     backend: "Backend",
+    bounty: "Bounty",
   };
   return (
     <Badge

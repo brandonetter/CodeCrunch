@@ -11,9 +11,15 @@ interface SocketContextType {
 
 const SocketContext = createContext<SocketContextType>({} as SocketContextType);
 
-export function SocketProvider({ children }: { children: React.ReactNode }) {
+export function SocketProvider({
+  children,
+  cookie,
+}: {
+  cookie: string;
+  children: React.ReactNode;
+}) {
   const { isConnected, activeUserList, latestRuns, latestPointTransactions } =
-    useSockets();
+    useSockets(cookie);
 
   return (
     <SocketContext.Provider

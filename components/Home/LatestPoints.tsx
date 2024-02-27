@@ -2,9 +2,7 @@
 import { useSocketContext } from "@/context/SocketProvider";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { Flame, Loader, Shell } from "lucide-react";
-import RunCards from "../shared/RunCards";
-import UserIcon from "../Header/UserIcon";
+import { Flame, Loader } from "lucide-react";
 import UserIconById from "../shared/UserIconById";
 export default function LatestPoints() {
   const { isConnected, latestPointTransactions } = useSocketContext();
@@ -21,18 +19,16 @@ export default function LatestPoints() {
   }
   return (
     <AnimatePresence>
-      <div className="relative h-80 mask2">
+      <div className="relative h-80 mask2 flex flex-col gap-y-1">
         <h1>Latest Victories</h1>
         {latestPointTransactions.map((pointTransaction, i) => (
           <motion.div
-            initial={{ opacity: 0, y: -10 + i * 65 }}
-            animate={{
-              opacity: 1,
-              y: 0 + i * 65,
-            }}
-            exit={{ opacity: 0, y: 20 + i * 65 }}
+            layoutId={pointTransaction}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
             key={pointTransaction.id}
-            className="flex justify-between bg-card select-none h-[60px] hover:bg-opacity-80 absolute w-full py-2 px-3  rounded-xl text-black shadow-md"
+            className="flex justify-between bg-card select-none h-[60px] hover:bg-opacity-80 w-full py-2 px-3  rounded-xl text-black shadow-md"
           >
             <div className="flex gap-4 text-gray-400 text-2xl justify-center items-center ">
               <span className="h-full justify-between uppercase flex flex-col">

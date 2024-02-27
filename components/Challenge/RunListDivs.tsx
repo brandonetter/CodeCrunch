@@ -88,7 +88,7 @@ export default function RunListDivs({ challengeId }: { challengeId: number }) {
     );
 
   return (
-    <div className="relative mask2 h-96">
+    <div className="relative mask2 h-72 flex flex-col gap-y-1">
       <h2>Latest Runs</h2>
       <RunCards runs={optimisticRuns} page="challenge" />
     </div>

@@ -2,7 +2,7 @@
 import prisma from "../prisma";
 import { Challenge, User } from "@prisma/client";
 import { hasUserPassedChallenge } from "./challengeruns.actions";
-import { getSession } from "../db";
+import { getSession } from "../auth";
 import { unstable_cache as cache } from "next/cache";
 
 export async function getCurrentUser() {

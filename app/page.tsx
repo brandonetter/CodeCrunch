@@ -8,6 +8,9 @@ import AnimateHeight from "@/components/Animations/AnimateHeight";
 import LatestRuns from "@/components/Home/LatestRuns";
 import LatestPoints from "@/components/Home/LatestPoints";
 export default async function Home({ searchParams }: { searchParams: any }) {
+  // unresolved promise so we can share the promise
+  // with the child components and they
+  // can know when the data is ready
   const challenges = getChallenges(searchParams);
 
   return (

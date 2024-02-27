@@ -9,6 +9,9 @@ import { getChallenge } from "@/lib/actions/challenges.actions";
 import remarkGfm from "remark-gfm";
 import RunPanel from "@/components/Challenge/RunPanel";
 import RunList from "@/components/Challenge/RunList";
+import ChallengeStats from "@/components/Challenge/ChallengeStats";
+import { IsAdmin } from "@/components/shared";
+import EditableMarkdown from "@/components/Challenge/EditableMarkdown";
 export default async function ChallengePage({
   params,
 }: {
@@ -26,9 +29,9 @@ export default async function ChallengePage({
           maxSize={50}
         >
           <RunList challengeId={challenge?.id!} />
-          <MarkDown remarkPlugins={[remarkGfm]}>
-            {challenge?.description}
-          </MarkDown>
+          <ChallengeStats challenge={challenge!} />
+
+          <EditableMarkdown text={challenge?.description!} />
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={80}>

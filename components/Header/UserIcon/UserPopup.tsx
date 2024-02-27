@@ -9,14 +9,13 @@ import {
 import SignOutButton from "./SignOutButton";
 import IsAdmin from "@/components/shared/IsAdmin";
 import Link from "next/link";
-import { getUserByEmail } from "@/lib/actions/user.actions";
-import { User } from "lucide-react";
 import UserStats from "./UserStats";
 export default async function UserPopup({
   user,
 }: {
   user: { name: string; email: string; image: string };
 }) {
+  console.log("refresh");
   return (
     <div className="h-screen w-[100%] border flex flex-col">
       <DrawerHeader className="focus:outline-none select-none">

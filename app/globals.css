@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "../lib/style/codetheme.css";
+
 @layer base {
   :root {
     --background: 20 14.3% 4.1%;
@@ -79,10 +81,10 @@
 .mask2 {
   -webkit-mask-image: linear-gradient(
     to bottom,
-    rgb(251, 251, 251) 60%,
+    rgb(251, 251, 251) 50%,
     transparent 80%
   );
-  mask-image: linear-gradient(to bottom, rgb(0, 0, 0) 60%, transparent 80%);
+  mask-image: linear-gradient(to bottom, rgb(0, 0, 0) 50%, transparent 90%);
 }
 h1 {
   @apply text-2xl;

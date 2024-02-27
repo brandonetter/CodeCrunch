@@ -2,7 +2,7 @@ import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 
 import SignUpButton from "./SignUpButton";
 import UserPopup from "./UserPopup";
-import { getSession } from "@/lib/db";
+import { getSession } from "@/lib/auth";
 export default async function UserIcon() {
   const session = await getSession();
 

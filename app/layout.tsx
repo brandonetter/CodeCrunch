@@ -6,8 +6,11 @@ import Header from "@/components/Header";
 import PopupProvider from "@/components/Popup/Provider";
 import { UserSession } from "@/components/shared/UserSession";
 import { SessionProvider } from "next-auth/react";
-import { getSession } from "@/lib/db";
+import { getSession } from "@/lib/auth";
 import { SocketProvider } from "@/context/SocketProvider";
+import { cookies } from "next/headers";
+import { getToken } from "next-auth/jwt";
+import console from "console";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -20,10 +23,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = cookies();
+
+  const nextAuthSession = cookieStore.get("next-auth.session-token");
+  console.log("nextAuthSession", nextAuthSession);
   return (
     <html lang="en">
       <body className={inter.className}>
-        <SocketProvider>
+        <SocketProvider cookie={nextAuthSession?.value!}>
           <UserSession />
           <Header />
           {children}
