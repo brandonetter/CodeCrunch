@@ -1,14 +1,16 @@
 "use client";
 import { onlyText } from "react-children-utilities";
-import { useEffect, useState, useTransition } from "react";
+import { isValidElement, useEffect, useState, useTransition } from "react";
 import { Copy } from "lucide-react";
 import CodeEditor from "@uiw/react-textarea-code-editor";
 import { Tabs, TabsContent, TabsTrigger } from "../ui/tabs";
 import { TabsList } from "@radix-ui/react-tabs";
-import { PlayCircle } from "lucide-react";
+import { PlayCircle, EyeIcon } from "lucide-react";
 
 import { runCodeRepl } from "@/lib/actions/code";
 import result from "postcss/lib/result";
+import React from "react";
+import { motion } from "framer-motion";
 
 export const Repl = (props: any) => {
   const [code, setCode] = useState("");
@@ -94,20 +96,71 @@ export const Repl = (props: any) => {
 
 export const Code = async (props: any) => {
   const text = onlyText(props.children);
+  const comment = text.match(/\/\/.*\n/);
+  const code = text.replace(comment ? comment[0] : "", "");
+
+  const cleanChildren: any = [];
+  React.Children.map(props.children, (child) => {
+    if (isValidElement(child)) {
+      const element: any = (child.props as any).children;
+      if (element !== comment?.[0]?.replace("\n", "")) {
+        cleanChildren.push(child);
+      }
+    } else {
+      cleanChildren.push(child);
+    }
+  });
+
   return (
     <section className="relative">
+      {comment && (
+        <div className="absolute top-0 rounded-br-[7px] left-0 py-2 px-4 bg-slate-800 text-xs text-gray-400">
+          {comment[0].replace("//", "")}
+        </div>
+      )}
       <pre>
         <code className="w-3/4" {...props}>
-          {props.children}
+          {cleanChildren.length > 0 ? cleanChildren : code}
         </code>
       </pre>
       <Copy
         className="absolute right-2 top-2 m-2 hover:cursor-pointer hover:stroke-green-500 transition-all"
         size={24}
         onClick={() => {
-          navigator.clipboard.writeText(text);
+          navigator.clipboard.writeText(code);
         }}
       />
     </section>
+  );
+};
+
+export const Blur = (props: any) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [isRevealed, setIsRevealed] = useState(false);
+  return (
+    <div className="rounded-lg p-1 my-4 relative">
+      <motion.div
+        initial={{ opacity: 1 }}
+        animate={{ opacity: isRevealed ? 0 : 1 }}
+        transition={{ duration: 0.5 }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onClick={() => setIsRevealed(true)}
+        className={`${
+          isRevealed && "pointer-events-none"
+        } cursor-pointer absolute z-10 top-0 left-0 backdrop-blur-[5px] transition-all hover:backdrop-blur-sm w-full h-full flex justify-center items-center`}
+      >
+        <EyeIcon size={"40%"} className="stroke-white/20" />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <p className="text-white/20 text-2xl absolute">Click to reveal</p>
+        </motion.div>
+      </motion.div>
+
+      {props.children}
+    </div>
   );
 };
