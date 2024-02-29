@@ -53,7 +53,7 @@ export default function RunListDivs({ challengeId }: { challengeId: number }) {
     if (!user) return;
     if (loading && isMountedRef.current)
       return startTransition(addOptimisticRun);
-  }, [loading, user]);
+  }, [loading, user, setOptimisticRuns]);
 
   useEffect(() => {
     // mount the initial runs
@@ -83,7 +83,7 @@ export default function RunListDivs({ challengeId }: { challengeId: number }) {
       latestRun[0].new = true;
       setRuns((prevRuns) => [latestRun[0], ...prevRuns]);
     }
-  }, [latestRuns, user]);
+  }, [latestRuns, user, challengeId]);
 
   if (!user) {
     return null;
