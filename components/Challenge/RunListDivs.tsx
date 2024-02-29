@@ -31,8 +31,8 @@ export default function RunListDivs({ challengeId }: { challengeId: number }) {
   const isMountedRef = useRef(false);
 
   useEffect(() => {
+    // mounting logic
     isMountedRef.current = true;
-
     return () => {
       isMountedRef.current = false;
     };
@@ -57,6 +57,8 @@ export default function RunListDivs({ challengeId }: { challengeId: number }) {
 
   useEffect(() => {
     // mount the initial runs
+    if (!isMountedRef.current) return;
+    if (!user) return;
     async function getChallenges() {
       const fetchedRuns = (await getChallengeRuns(
         user.id,
@@ -76,14 +78,16 @@ export default function RunListDivs({ challengeId }: { challengeId: number }) {
     // this is much more efficient than
     // a server action
     if (!latestRuns.length) return;
+    if (!user) return;
     const latestRun = latestRuns.filter(
       (run) => run.userId === user.id && run.challengeId === challengeId
     );
     if (latestRun[0]) {
+      if (runs.some((run) => run.id === latestRun[0].id)) return;
       latestRun[0].new = true;
       setRuns((prevRuns) => [latestRun[0], ...prevRuns]);
     }
-  }, [latestRuns, user, challengeId]);
+  }, [latestRuns, user, challengeId, runs]);
 
   if (!user) {
     return null;
