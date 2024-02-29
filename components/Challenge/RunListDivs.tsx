@@ -1,13 +1,13 @@
 import { useCodeStore, useUserStore } from "@/context";
 import { getChallengeRuns } from "@/lib/actions/challengeruns.actions";
 import { ChallengeRun } from "@prisma/client";
-import { motion } from "framer-motion";
 import { useState, useEffect, useRef, useTransition } from "react";
-import { Button } from "../ui/button";
 import { uuid } from "uuidv4";
 import { useOptimistic } from "react";
-import { Loader } from "lucide-react";
+
 import RunCards from "../shared/RunCards";
+
+import { useSocketContext } from "@/context/SocketProvider";
 
 interface ChallengeRunLoader extends ChallengeRun {
   new?: boolean;
@@ -15,6 +15,8 @@ interface ChallengeRunLoader extends ChallengeRun {
 
 export default function RunListDivs({ challengeId }: { challengeId: number }) {
   const { loading, setCode } = useCodeStore();
+  const { latestRuns } = useSocketContext();
+
   const { user } = useUserStore();
   const [runs, setRuns] = useState<ChallengeRun[]>([]);
   const [, startTransition] = useTransition();
@@ -37,6 +39,7 @@ export default function RunListDivs({ challengeId }: { challengeId: number }) {
   }, []);
 
   useEffect(() => {
+    // set the loader run
     const addOptimisticRun = () => {
       const optimisticRun = {
         id: uuid(),
@@ -50,8 +53,11 @@ export default function RunListDivs({ challengeId }: { challengeId: number }) {
     if (!user) return;
     if (loading && isMountedRef.current)
       return startTransition(addOptimisticRun);
+  }, [loading, user]);
+
+  useEffect(() => {
+    // mount the initial runs
     async function getChallenges() {
-      console.log("run");
       const fetchedRuns = (await getChallengeRuns(
         user.id,
         challengeId
@@ -62,9 +68,22 @@ export default function RunListDivs({ challengeId }: { challengeId: number }) {
         setHasMounted(true);
       }
     }
-
     getChallenges();
-  }, [loading, user]);
+  }, [challengeId, user]);
+
+  useEffect(() => {
+    // use the sockets to update the runs
+    // this is much more efficient than
+    // a server action
+    if (!latestRuns.length) return;
+    const latestRun = latestRuns.filter(
+      (run) => run.userId === user.id && run.challengeId === challengeId
+    );
+    if (latestRun[0]) {
+      latestRun[0].new = true;
+      setRuns((prevRuns) => [latestRun[0], ...prevRuns]);
+    }
+  }, [latestRuns, user]);
 
   if (!user) {
     return null;
