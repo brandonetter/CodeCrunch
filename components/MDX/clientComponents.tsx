@@ -5,7 +5,7 @@ import { Copy } from "lucide-react";
 import CodeEditor from "@uiw/react-textarea-code-editor";
 import { Tabs, TabsContent, TabsTrigger } from "../ui/tabs";
 import { TabsList } from "@radix-ui/react-tabs";
-import { PlayCircle, EyeIcon } from "lucide-react";
+import { PlayCircle, EyeIcon, Loader2Icon } from "lucide-react";
 
 import { runCodeRepl } from "@/lib/actions/code";
 import result from "postcss/lib/result";
@@ -37,15 +37,23 @@ export const Repl = (props: any) => {
         className="bg-slate-800"
       >
         <TabsList className="pt-2 flex items-center">
-          <PlayCircle
-            onClick={!isPending ? runCode : undefined}
-            size={30}
-            className="shrink-0 mx-2 fill-slate-800 stroke-slate-700
+          {isPending ? (
+            <Loader2Icon
+              size={30}
+              className="shrink-0 mx-2 fill-slate-800 stroke-slate-700 animate-spin"
+            />
+          ) : (
+            <PlayCircle
+              onClick={!isPending ? runCode : undefined}
+              size={30}
+              className={`shrink-0 mx-2 fill-slate-800 stroke-slate-700
             hover:cursor-pointer
-            hover:stroke-green-500
             transition-all
-            "
-          />
+            hover:stroke-green-500
+
+            `}
+            />
+          )}
 
           <TabsTrigger onClick={() => setSelectedTab("code")} value="code">
             Editor
@@ -66,7 +74,7 @@ export const Repl = (props: any) => {
           }}
         >
           <pre
-            className="text-white p-2 overflow-y-scroll"
+            className="text-white p-2 overflow-y-auto"
             style={{
               height: props.height || "200px",
             }}
@@ -81,6 +89,7 @@ export const Repl = (props: any) => {
             onChange={(evn) => setCode(evn.target.value)}
             padding={15}
             style={{
+              overflow: "auto",
               height: props.height || "200px",
               fontSize: 12,
               backgroundColor: "#1e1e1e",

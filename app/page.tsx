@@ -15,6 +15,7 @@ export default async function Home({ searchParams }: { searchParams: any }) {
 
   return (
     <PageLayout type={1}>
+      <span className="bg-black-300">asd</span>
       <section className="flex flex-row w-full gap-8 relative">
         <div className="w-1/2">
           <LatestRuns />
