@@ -35,7 +35,7 @@ const DataTable = (datum: any) => {
                 </tr>
               </thead>
               <tbody>
-                {data[key]?.map((item) => (
+                {data[key]?.map((item: any) => (
                   <tr
                     key={item.id}
                     className="bg-white/60 text-black border-b-black border "
@@ -45,7 +45,7 @@ const DataTable = (datum: any) => {
                         key={index}
                         className="text-center border-x-black border"
                       >
-                        {value}
+                        {value as string}
                       </td>
                     ))}
                   </tr>
