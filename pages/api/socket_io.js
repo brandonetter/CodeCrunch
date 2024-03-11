@@ -3,6 +3,16 @@ import { getSession } from "next-auth/react";
 import { createClient } from "@supabase/supabase-js";
 import prisma from "@/lib/prisma";
 
+/*
+Our local socket server.
+
+This can't be used with vercel, as it doesn't support websockets.
+But this code can be used with a self-hosted server, we
+just need to modify where the `useSockets` hook
+connects if we change the server.
+
+*/
+
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SERVICE_KEY
@@ -48,6 +58,7 @@ export default async function SocketHandler(req, res) {
               userMap.forEach((_, socket) => {
                 io.to(socket.id).emit("newRun", payload.new);
               });
+
               break;
             case "PointTransaction":
               userMap.forEach((_, socket) => {

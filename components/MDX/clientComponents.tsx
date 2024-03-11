@@ -12,6 +12,55 @@ import result from "postcss/lib/result";
 import React from "react";
 import { motion } from "framer-motion";
 
+const DataTable = (datum: any) => {
+  try {
+    const data = JSON.parse(datum);
+    return (
+      <div>
+        {Object.keys(data).map((key) => (
+          <div key={key}>
+            <h2 className="opacity-70">{key}</h2>
+            <table>
+              <thead>
+                <tr>
+                  {data[key].length > 0 &&
+                    Object.keys(data[key][0]).map((header) => (
+                      <th
+                        className="border-2 px-4 bg-white/40 text-black"
+                        key={header}
+                      >
+                        {header}
+                      </th>
+                    ))}
+                </tr>
+              </thead>
+              <tbody>
+                {data[key]?.map((item) => (
+                  <tr
+                    key={item.id}
+                    className="bg-white/60 text-black border-b-black border "
+                  >
+                    {Object.values(item).map((value, index) => (
+                      <td
+                        key={index}
+                        className="text-center border-x-black border"
+                      >
+                        {value}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ))}
+      </div>
+    );
+  } catch (e) {
+    return "Invalid JSON";
+  }
+};
+
 export const Repl = (props: any) => {
   const [code, setCode] = useState("");
   const [output, setOutput] = useState(">");
@@ -24,7 +73,11 @@ export const Repl = (props: any) => {
   const runCode = async () => {
     startTransition(async () => {
       setSelectedTab("console");
-      const result = await runCodeRepl(code);
+      const result = await runCodeRepl(
+        code,
+        props.type || "js",
+        props.data || {}
+      );
       setOutput("> " + (result.stderr || result.stdout));
     });
   };
@@ -65,6 +118,17 @@ export const Repl = (props: any) => {
           >
             Console
           </TabsTrigger>
+          {props.type === "sql" && (
+            <>
+              <TabsTrigger
+                disabled={isPending}
+                onClick={() => setSelectedTab("table")}
+                value="table"
+              >
+                Table
+              </TabsTrigger>
+            </>
+          )}
         </TabsList>
         <TabsContent
           value="console"
@@ -82,21 +146,41 @@ export const Repl = (props: any) => {
             {output}
           </pre>
         </TabsContent>
+        {props.type === "sql" && (
+          <TabsContent value="table">
+            <pre
+              className="text-white p-2 overflow-y-auto"
+              style={{
+                height: props.height || "200px",
+              }}
+            >
+              {DataTable(props.data)}
+            </pre>
+          </TabsContent>
+        )}
         <TabsContent value="code">
-          <CodeEditor
-            value={code}
-            language="js"
-            onChange={(evn) => setCode(evn.target.value)}
-            padding={15}
+          <div
+            className="overflow-y-auto"
             style={{
               overflow: "auto",
               height: props.height || "200px",
-              fontSize: 12,
               backgroundColor: "#1e1e1e",
-              fontFamily:
-                "ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace",
             }}
-          />
+          >
+            <CodeEditor
+              value={code}
+              language="js"
+              onChange={(evn) => setCode(evn.target.value)}
+              padding={4}
+              style={{
+                minHeight: props.height || "200px",
+                fontSize: 20,
+                backgroundColor: "#1e1e1e",
+                fontFamily:
+                  "ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace",
+              }}
+            />
+          </div>
         </TabsContent>
       </Tabs>
     </div>

@@ -14,7 +14,7 @@ interface ChallengeRunLoader extends ChallengeRun {
 }
 
 export default function RunListDivs({ challengeId }: { challengeId: number }) {
-  const { loading, setCode } = useCodeStore();
+  const { loading } = useCodeStore();
   const { latestRuns } = useSocketContext();
 
   const { user } = useUserStore();
@@ -77,6 +77,7 @@ export default function RunListDivs({ challengeId }: { challengeId: number }) {
     // use the sockets to update the runs
     // this is much more efficient than
     // a server action
+
     if (!latestRuns.length) return;
     if (!user) return;
     const latestRun = latestRuns.filter(

@@ -3,12 +3,14 @@ import { useSocketContext } from "@/context/SocketProvider";
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader } from "lucide-react";
 import RunCards from "../shared/RunCards";
+import Button from "../shared/Button";
 export default function LatestRuns() {
   const { isConnected, activeUserList, latestRuns } = useSocketContext();
 
   if (!isConnected || !latestRuns.length) {
     return (
       <div className="h-80   flex flex-col items-start justify-start">
+        <Button.Plus onClick={() => alert("a")}>asd</Button.Plus>
         <h1>Latest Runs</h1>
         <div className="h-full w-full flex items-center justify-center">
           <Loader size="50" className="animate-spin" />
