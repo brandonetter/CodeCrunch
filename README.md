@@ -22,3 +22,29 @@ A super fast, real-time, modern code-challenge site. With Server-Side-Rendering 
 - PistonJS hosted seperately to safely run user code in a sandbox
 - NextJS and Framer to render a responsive and snappy SSR interface to the user
 - PostgreSQL to host the user's challenges and accomplishments
+
+### Overview
+Codecruncher provides a list of previous runs, a searchable challenge list with filters, modern tools in the UI
+
+https://github.com/brandonetter/CodeCrunch/assets/4108484/d1f6b3cc-9427-4f07-84e9-387358471fad
+
+### Editor
+Cached server actions allow for sleak realtime updates as the user submits code challenges to be tested in the Sandbox
+
+
+https://github.com/brandonetter/CodeCrunch/assets/4108484/cc8142e8-285b-4406-b8ca-6cd98d6f60c7
+
+### Error Reporting
+Errors in user-submitted code are handled
+
+https://github.com/brandonetter/CodeCrunch/assets/4108484/98296e29-48e9-4c72-9991-bda483194ee0
+
+### Sockets
+Leveraging sockets for realtime updates on challenge progression from all users across all pages
+
+
+https://github.com/brandonetter/CodeCrunch/assets/4108484/0861598d-1787-4dd3-8f49-181582fbe4f8
+
+
+
+
