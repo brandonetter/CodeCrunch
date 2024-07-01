@@ -3,6 +3,7 @@
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![PistonJS](https://img.shields.io/badge/PistonJS-1572B6?style=for-the-badge&logo=javascript&logoColor=white)
+![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![SSR](https://img.shields.io/badge/SSR-4A4A55?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAABnSURBVHjaYvz//z8DJYCJgUIwdDUyMjIwXL58+T8+HA0OcIARn25cAF0xukZ0xSC9LNgMxAXQNf//jx5c////RzYAmx5GXLHKhEefELrNhExFVsyETzMuPSwoHo0pCrxOSkpKBhgAcashhAvleE8AAAAASUVORK5CYII=)
 ![Framer](https://img.shields.io/badge/Framer-0055FF?style=for-the-badge&logo=framer&logoColor=white)
