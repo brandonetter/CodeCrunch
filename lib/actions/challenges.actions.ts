@@ -1,7 +1,6 @@
 "use server";
 import prisma from "../prisma";
 import { unstable_cache as cache, revalidateTag } from "next/cache";
-import result from "postcss/lib/result";
 
 type searchType = {
   page?: string | number | undefined;

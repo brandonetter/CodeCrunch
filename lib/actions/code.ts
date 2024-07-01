@@ -24,7 +24,7 @@ export async function runCodeRepl(code: string, type: string, data?: any) {
       },
       body: JSON.stringify({
         language: "javascript",
-        version: "18.15.0",
+        version: "20.11.1",
         files: [
           {
             name: "main.mjs",
@@ -62,7 +62,7 @@ export async function runCodeRepl(code: string, type: string, data?: any) {
       },
       body: JSON.stringify({
         language: "javascript",
-        version: "18.15.0",
+        version: "20.11.1",
         files: [
           {
             name: "main.mjs",
@@ -156,7 +156,7 @@ export async function runCode(code: string, challenge: string) {
         },
         body: JSON.stringify({
           language: "javascript",
-          version: "18.15.0",
+          version: "20.11.1",
           files: [
             {
               name: "main.mjs",
@@ -197,6 +197,7 @@ export async function runCode(code: string, challenge: string) {
     output: JSON.stringify(expectedOutput),
   }));
   let errorText = "";
+  console.log(responses);
   expectedOutputs.forEach((expectedOutput: any, index: number) => {
     const { stderr, stdout } = responses[index].run;
     if (stderr) {

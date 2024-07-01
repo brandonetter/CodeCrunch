@@ -31,20 +31,14 @@ export default async function UserPopup({
                 Admin
               </Button>
             </Link>
-
-            <div className="my-4 h-px bg-muted" />
           </IsAdmin>
-          <SignOutButton />
 
           {/* divider */}
           <div className="my-4 h-px bg-muted" />
           {/* divider */}
           <div className="flex flex-col gap-2">
             <Button variant="outline" className="w-full">
-              My Challenges
-            </Button>
-            <Button variant="outline" className="w-full">
-              My Challenges
+              My Favorites
             </Button>
             <Button variant="outline" className="w-full">
               My Challenges
@@ -56,6 +50,7 @@ export default async function UserPopup({
         <DrawerClose asChild>
           <Button variant="secondary">Close</Button>
         </DrawerClose>
+        <SignOutButton />
       </DrawerFooter>
     </div>
   );

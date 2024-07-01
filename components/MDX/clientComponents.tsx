@@ -1,4 +1,5 @@
 "use client";
+
 import { onlyText } from "react-children-utilities";
 import { isValidElement, useEffect, useState, useTransition } from "react";
 import { Copy } from "lucide-react";
@@ -6,15 +7,18 @@ import CodeEditor from "@uiw/react-textarea-code-editor";
 import { Tabs, TabsContent, TabsTrigger } from "../ui/tabs";
 import { TabsList } from "@radix-ui/react-tabs";
 import { PlayCircle, EyeIcon, Loader2Icon } from "lucide-react";
-
+import { jsonrepair } from "jsonrepair";
 import { runCodeRepl } from "@/lib/actions/code";
-import result from "postcss/lib/result";
 import React from "react";
 import { motion } from "framer-motion";
 
 const DataTable = (datum: any) => {
   try {
-    const data = JSON.parse(datum);
+    // const str = JSON.stringify(datum);
+    const dataFixed = jsonrepair(datum);
+    // for each key in the object
+    // create a tablec
+    const data = JSON.parse(dataFixed);
     return (
       <div>
         {Object.keys(data).map((key) => (
@@ -57,7 +61,7 @@ const DataTable = (datum: any) => {
       </div>
     );
   } catch (e) {
-    return "Invalid JSON";
+    return e + "Invalid JSON";
   }
 };
 

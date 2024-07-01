@@ -7,7 +7,6 @@ import TableHeader from "@/components/Home/Tables/ChallengeTable/TableHeader";
 import AnimateHeight from "@/components/Animations/AnimateHeight";
 import LatestRuns from "@/components/Home/LatestRuns";
 import LatestPoints from "@/components/Home/LatestPoints";
-import OurButton from "@/components/shared/Button";
 export default async function Home({ searchParams }: { searchParams: any }) {
   // unresolved promise so we can share the promise
   // with the child components and they
@@ -16,8 +15,6 @@ export default async function Home({ searchParams }: { searchParams: any }) {
 
   return (
     <PageLayout type={1}>
-      <span className="bg-black-300">asd</span>
-
       <section className="flex flex-row w-full gap-8 relative">
         <div className="w-1/2">
           <LatestRuns />
